@@ -1,0 +1,9 @@
+{
+  "metadata": {
+    "title": {
+      "template": "ScProfile",
+      "default": "ScProfile"
+    },
+    "description": "「ScProfile」とは、Scratchアカウントのプロフィール作成サービスです。Scratchアカウントと連携することで利用することが可能です。"
+  }
+}

@@ -1,0 +1,1 @@
+find . \( -name '.DS_Store' -or -name '._*' \) -delete -print
