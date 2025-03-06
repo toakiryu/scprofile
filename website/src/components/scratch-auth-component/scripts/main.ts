@@ -1,16 +1,30 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { ScratchAuthComponent, ScratchUserType } from "scratch-auth-component";
+import { ScratchAuthComponent, ScratchUserType } from "./";
 import type {
   ScratchAuthComponentResult,
   ScratchAuthSessionType,
-} from "./index";
+} from "./type";
 import { deleteCookie, getCookie } from "./cookie";
 import scratchAuthComponentConfig from "../../../../_config/scratch-auth-component.config";
 
 export async function scratchAuthSessionGetUserName(session: string) {
-  return await ScratchAuthComponent.action.getUserName(session);
+  try {
+    const result = await ScratchAuthComponent.action.getUserName(session);
+    // プレーンオブジェクトとして返す
+    return {
+      status: result.status,
+      message: result.message,
+      body: result.body ? String(result.body) : undefined,
+    };
+  } catch (error) {
+    return {
+      status: false,
+      message: error instanceof Error ? error.message : "Unknown error",
+      body: undefined,
+    };
+  }
 }
 
 // セッションが存在するか確認

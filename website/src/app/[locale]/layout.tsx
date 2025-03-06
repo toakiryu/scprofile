@@ -160,7 +160,7 @@ export default async function LocaleLayout({
         >
           <NextIntlClientProvider messages={messages}>
             <main className="w-full h-full">{children}</main>
-            <Toaster />
+            <Toaster richColors/>
           </NextIntlClientProvider>
         </ThemeProvider>
       </body>

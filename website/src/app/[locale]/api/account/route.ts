@@ -61,7 +61,7 @@ export async function GET(req: NextRequest) {
       // 新規ユーザーをSupabaseのusersテーブルから取得
       const { data: user, error } = await supabase
         .from("users")
-        .select("scratch_username")
+        .select("*")
         .eq("scratch_username", scratch_username)
         .single();
 

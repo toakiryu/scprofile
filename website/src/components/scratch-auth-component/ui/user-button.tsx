@@ -17,6 +17,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { deleteCookie } from "cookies-next/client";
+import scratchAuthComponentConfig from "../../../../_config/scratch-auth-component.config";
 
 function UserButton() {
   const { isLoading, user } = useScratchAuthUser();
@@ -83,7 +85,12 @@ function UserButton() {
               <DropdownMenuItem>Support</DropdownMenuItem>
               <DropdownMenuItem disabled>API</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  deleteCookie(scratchAuthComponentConfig.cookie_name);
+                  window.location.reload();
+                }}
+              >
                 Log out
                 <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
               </DropdownMenuItem>
