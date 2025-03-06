@@ -9,6 +9,10 @@ import type {
 import { deleteCookie, getCookie } from "./cookie";
 import scratchAuthComponentConfig from "../../../../_config/scratch-auth-component.config";
 
+export async function scratchAuthSessionGetUserName(session: string) {
+  return await ScratchAuthComponent.action.getUserName(session);
+}
+
 // セッションが存在するか確認
 export async function scratchAuthCheckSession(): Promise<
   ScratchAuthComponentResult<ScratchAuthSessionType>
@@ -24,87 +28,14 @@ export async function scratchAuthCheckSession(): Promise<
       };
     } else {
       await deleteCookie(scratchAuthComponentConfig.cookie_name);
-      return {
-        status: false,
-        message: "Failed to retrieve session.",
-        error: "Could not decrypt session.",
-        body: null,
-      };
+      throw new Error("Failed to retrieve session. Could not decrypt session.");
     }
   } else {
-    return {
-      status: false,
-      message: "Cookie does not exist",
-      body: null,
-    };
-  }
-}
-
-// セッションを設定
-export async function setScratchAuthSession(
-  privateCode: ScratchAuthSessionType
-): Promise<
-  ScratchAuthComponentResult<{
-    name: string;
-    value: string;
-    options: {
-      expires: Date;
-      path: string;
-    };
-  }>
-> {
-  if (!privateCode) {
-    return {
-      status: false,
-      message: "privateCode is required.",
-      body: null,
-    };
-  }
-
-  try {
-    const res = await ScratchAuthComponent.action.verifyToken(privateCode);
-
-    if (res.body) {
-      if (!res.body.data?.username) {
-        return {
-          status: false,
-          message: "Username missing from token response.",
-          body: null,
-        };
-      }
-
-      const save_cookie_data = await ScratchAuthComponent.action.encryptedData(
-        scratchAuthComponentConfig.cookie_name,
-        res.body.data.username,
-        scratchAuthComponentConfig.expiration
-      );
-
-      return {
-        status: true,
-        message: "Invalid token response during session setup.",
-        body: save_cookie_data.body,
-      };
-    } else {
-      return {
-        status: false,
-        message: "Invalid token response during session setup.",
-        body: null,
-      };
-    }
-  } catch (error) {
-    return {
-      status: false,
-      message: `${error}`,
-      body: null,
-    };
+    throw new Error("Cookie does not exist");
   }
 }
 
 export const scratchAuthLogin = async (redirect_url?: string) => {
-  const session = await scratchAuthCheckSession();
-  if (session.status) {
-    return false;
-  }
   const redirectLocation = btoa(
     redirect_url || scratchAuthComponentConfig.redirect_url
   );
@@ -123,15 +54,62 @@ export const scratchUserInfo = async (
     const fetchScratchUserInfoData = await fetchScratchUserInfo.json();
     return {
       status: true,
-      message: "",
+      message: "ok",
       body: fetchScratchUserInfoData,
     };
-  } catch (error) {
-    return {
-      status: false,
-      message: "",
-      error: error,
-      body: null,
-    };
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new Error(`Failed to fetch Scratch user info: ${error.message}`);
+    } else {
+      throw new Error("Failed to fetch Scratch user info: Unknown error");
+    }
   }
 };
+
+// セッションを設定
+export async function setScratchAuthSession(
+  privateCode: ScratchAuthSessionType
+): Promise<
+  ScratchAuthComponentResult<{
+    name: string;
+    value: string;
+    options: {
+      expires: Date;
+      path: string;
+    };
+  }>
+> {
+  if (!privateCode) {
+    throw new Error("privateCode is required.");
+  }
+
+  try {
+    const res = await ScratchAuthComponent.action.verifyToken(privateCode);
+
+    if (res.body) {
+      if (!res.body.data?.username) {
+        throw new Error("Username missing from token response.");
+      }
+
+      const save_cookie_data = await ScratchAuthComponent.action.encryptedData(
+        scratchAuthComponentConfig.cookie_name,
+        res.body.data.username,
+        scratchAuthComponentConfig.expiration
+      );
+
+      return {
+        status: true,
+        message: "Session setup successful.",
+        body: save_cookie_data.body,
+      };
+    } else {
+      throw new Error("Invalid token response during session setup.");
+    }
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new Error(`Error during session setup: ${error.message}`);
+    } else {
+      throw new Error("Error during session setup: Unknown error");
+    }
+  }
+}

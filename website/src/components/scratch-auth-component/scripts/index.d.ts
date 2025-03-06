@@ -8,8 +8,8 @@ export interface ScratchAuthComponentConfigType {
 export interface ScratchAuthComponentResult<T> {
   status: boolean;
   message: string;
-  body: T | null;
+  body: T | undefined;
   error?: unknown;
 }
 
-export type ScratchAuthSessionType = string | null;
+export type ScratchAuthSessionType = string | undefined;
