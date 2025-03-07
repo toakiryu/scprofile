@@ -1,51 +1,71 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { ScratchAuthComponent, ScratchUserType } from "./";
-import type {
-  ScratchAuthComponentResult,
-  ScratchAuthSessionType,
-} from "./type";
-import { deleteCookie, getCookie } from "./cookie";
+import { ScratchAuthComponent } from "./";
+import type { ScratchAuthSessionType, ScratchUserType } from "./type";
 import scratchAuthComponentConfig from "../../../../_config/scratch-auth-component.config";
+import { ResultType } from "@/types/api";
+import { deleteCookie, getCookie } from "./cookie";
+import sessionConfig from "../../../../_config/session.config";
 
-export async function scratchAuthSessionGetUserName(session: string) {
+export async function scratchAuthSessionGetUserName(
+  session: string
+): Promise<ResultType<string>> {
   try {
     const result = await ScratchAuthComponent.action.getUserName(session);
-    // プレーンオブジェクトとして返す
-    return {
-      status: result.status,
-      message: result.message,
-      body: result.body ? String(result.body) : undefined,
-    };
+
+    if (result.data) {
+      return {
+        success: true,
+        data: result.data,
+      };
+    } else {
+      return {
+        success: false,
+        message: result.message,
+      };
+    }
   } catch (error) {
     return {
-      status: false,
+      success: false,
       message: error instanceof Error ? error.message : "Unknown error",
-      body: undefined,
     };
   }
 }
 
 // セッションが存在するか確認
-export async function scratchAuthCheckSession(): Promise<
-  ScratchAuthComponentResult<ScratchAuthSessionType>
-> {
-  const session = await getCookie(scratchAuthComponentConfig.cookie_name);
+export async function scratchAuthCheckSession({
+  cookie_name,
+  session,
+}: {
+  cookie_name?: string;
+  session?: string;
+}): Promise<ResultType<ScratchAuthSessionType>> {
+  if (!session) {
+    const res = await getCookie(
+      cookie_name || sessionConfig.account_cookie_name
+    );
+    session = res?.value;
+  }
   if (session) {
-    const res = await ScratchAuthComponent.action.getUserName(session.value);
-    if (res.status && res.body) {
+    const res = await ScratchAuthComponent.action.getUserName(session);
+    if (res.data) {
       return {
-        status: true,
-        message: "Session successfully retrieved.",
-        body: res.body,
+        success: true,
+        data: res.data,
       };
     } else {
-      await deleteCookie(scratchAuthComponentConfig.cookie_name);
-      throw new Error("Failed to retrieve session. Could not decrypt session.");
+      await deleteCookie(sessionConfig.account_cookie_name);
+      return {
+        success: false,
+        message: "Failed to retrieve session. Could not decrypt session.",
+      };
     }
   } else {
-    throw new Error("Cookie does not exist");
+    return {
+      success: false,
+      message: "Cookie does not exist.",
+    };
   }
 }
 
@@ -60,22 +80,28 @@ export const scratchAuthLogin = async (redirect_url?: string) => {
 
 export const scratchUserInfo = async (
   username: string
-): Promise<ScratchAuthComponentResult<ScratchUserType>> => {
+): Promise<ResultType<ScratchUserType>> => {
   try {
     const fetchScratchUserInfo = await fetch(
       `http://api.scratch.mit.edu/users/${username}`
     );
     const fetchScratchUserInfoData = await fetchScratchUserInfo.json();
     return {
-      status: true,
-      message: "ok",
-      body: fetchScratchUserInfoData,
+      success: true,
+      data: fetchScratchUserInfoData,
     };
   } catch (error: unknown) {
     if (error instanceof Error) {
-      throw new Error(`Failed to fetch Scratch user info: ${error.message}`);
+      return {
+        success: false,
+        message: "Failed to fetch Scratch user info.",
+        error: error.message,
+      };
     } else {
-      throw new Error("Failed to fetch Scratch user info: Unknown error");
+      return {
+        success: false,
+        message: "Failed to fetch Scratch user info: Unknown error.",
+      };
     }
   }
 };
@@ -84,7 +110,7 @@ export const scratchUserInfo = async (
 export async function setScratchAuthSession(
   privateCode: ScratchAuthSessionType
 ): Promise<
-  ScratchAuthComponentResult<{
+  ResultType<{
     name: string;
     value: string;
     options: {
@@ -94,36 +120,51 @@ export async function setScratchAuthSession(
   }>
 > {
   if (!privateCode) {
-    throw new Error("privateCode is required.");
+    return {
+      success: false,
+      message: "privateCode is required..",
+    };
   }
 
   try {
     const res = await ScratchAuthComponent.action.verifyToken(privateCode);
 
-    if (res.body) {
-      if (!res.body.data?.username) {
-        throw new Error("Username missing from token response.");
+    if (res.data) {
+      if (!res.data.data?.username) {
+        return {
+          success: false,
+          message: "Username missing from token response.",
+        };
       }
 
       const save_cookie_data = await ScratchAuthComponent.action.encryptedData(
-        scratchAuthComponentConfig.cookie_name,
-        res.body.data.username,
+        sessionConfig.account_cookie_name,
+        res.data.data.username,
         scratchAuthComponentConfig.expiration
       );
 
       return {
-        status: true,
-        message: "Session setup successful.",
-        body: save_cookie_data.body,
+        success: true,
+        data: save_cookie_data.data,
       };
     } else {
-      throw new Error("Invalid token response during session setup.");
+      return {
+        success: false,
+        message: "Invalid token response during session setup.",
+      };
     }
   } catch (error: unknown) {
     if (error instanceof Error) {
-      throw new Error(`Error during session setup: ${error.message}`);
+      return {
+        success: false,
+        message: "Error during session setup.",
+        error: error.message,
+      };
     } else {
-      throw new Error("Error during session setup: Unknown error");
+      return {
+        success: false,
+        message: "Error during session setup: Unknown error.",
+      };
     }
   }
 }

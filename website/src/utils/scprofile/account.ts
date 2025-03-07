@@ -1,0 +1,140 @@
+"use server";
+
+import { ResultNotDataType, ResultType } from "@/types/api";
+import { scprofileUserType } from "@/types/scprofile";
+
+type getScprofileUserInfoType = {
+  user_id?: string;
+  scratch_id?: string;
+  scratch_username?: string;
+};
+
+export const getScprofileUserInfo = async ({
+  user_id,
+  scratch_id,
+  scratch_username,
+}: getScprofileUserInfoType): Promise<ResultType<scprofileUserType>> => {
+  let searchParams;
+
+  if (user_id) {
+    searchParams = `user_id=${user_id}`;
+  } else if (scratch_id) {
+    searchParams = `scratch_id=${scratch_id}`;
+  } else if (scratch_username) {
+    searchParams = `scratch_username=${scratch_username}`;
+  } else {
+    return {
+      success: false,
+      message:
+        "`user_id`, `scratch_id`, または `scratch_username` を指定してください。",
+    };
+  }
+
+  try {
+    const response = await fetch(
+      `${process.env.BASE_URL}/en/api/account/users?${searchParams}`
+    );
+    const resData: ResultType<scprofileUserType> = await response.json();
+    if (resData.success) {
+      return {
+        success: true,
+        data: resData.data,
+      };
+    } else {
+      return {
+        success: false,
+        message: resData.message,
+      };
+    }
+  } catch (error) {
+    return {
+      success: false,
+      message: "ユーザー情報の取得に失敗しました。",
+      error: (error as Error).message,
+    };
+  }
+};
+
+export const getScprofileUserSignup = async ({
+  scratch_username,
+  display_name,
+}: {
+  scratch_username: string;
+  display_name?: string;
+}): Promise<ResultType<scprofileUserType>> => {
+  let body = {};
+
+  if (!scratch_username) {
+    return {
+      success: false,
+      message: "`scratch_username` を指定してください。",
+    };
+  } else {
+    body = {
+      scratch_username: scratch_username,
+      display_name: display_name || scratch_username,
+    };
+  }
+
+  try {
+    const response = await fetch(
+      `${process.env.BASE_URL}/en/api/account/signup`,
+      {
+        method: "POST",
+        body: JSON.stringify(body),
+      }
+    );
+    const resData: ResultNotDataType = await response.json();
+    if (resData.success) {
+      return {
+        success: true,
+      };
+    } else {
+      return {
+        success: false,
+        message: resData.message,
+      };
+    }
+  } catch (error) {
+    return {
+      success: false,
+      message: "ユーザー情報の登録に失敗しました。",
+      error: (error as Error).message,
+    };
+  }
+};
+
+export const getScprofileUserSignin = async ({
+  session,
+}: {
+  session: string;
+}): Promise<ResultType<boolean>> => {
+  try {
+    const response = await fetch(
+      `${process.env.BASE_URL}/en/api/account/signin`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          session: session,
+        }),
+      }
+    );
+    const resData: ResultNotDataType = await response.json();
+    if (resData.success) {
+      return {
+        success: true,
+      };
+    } else {
+      return {
+        success: false,
+        message: resData.message,
+      };
+    }
+  } catch (error) {
+    return {
+      success: false,
+      message: "ScProfileアカウントへのログインに失敗しました。",
+      error: (error as Error).message,
+    };
+  }
+};

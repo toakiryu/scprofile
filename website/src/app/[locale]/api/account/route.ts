@@ -20,9 +20,8 @@ export async function GET(req: NextRequest) {
       if (error) {
         return NextResponse.json(
           {
-            ok: false,
             message: "ユーザー取得中にエラーが発生しました。",
-            error_message: error.message, // 修正：エラーメッセージを返す
+            error: error.message, // 修正：エラーメッセージを返す
           },
           { status: 400 }
         );
@@ -31,27 +30,18 @@ export async function GET(req: NextRequest) {
         // 修正：userが空の場合も対応
         return NextResponse.json(
           {
-            ok: false,
             message: "リクエストされたユーザーは存在しません",
           },
           { status: 400 }
         );
       }
 
-      return NextResponse.json(
-        {
-          ok: true,
-          message: "ユーザー情報を取得しました。",
-          body: user,
-        },
-        { status: 200 }
-      );
+      return NextResponse.json(user, { status: 200 });
     } catch (error) {
       return NextResponse.json(
         {
-          ok: false,
           message: "サーバーエラーが発生しました",
-          error_message: (error as Error).message, // 修正：エラーメッセージを返す
+          error: (error as Error).message, // 修正：エラーメッセージを返す
         },
         { status: 500 }
       );
@@ -68,9 +58,8 @@ export async function GET(req: NextRequest) {
       if (error) {
         return NextResponse.json(
           {
-            ok: false,
             message: "ユーザー取得中にエラーが発生しました。",
-            error_message: error.message, // 修正：エラーメッセージを返す
+            error: error.message, // 修正：エラーメッセージを返す
           },
           { status: 400 }
         );
@@ -79,27 +68,18 @@ export async function GET(req: NextRequest) {
         // 修正：userが空の場合も対応
         return NextResponse.json(
           {
-            ok: false,
             message: "リクエストされたユーザーは存在しません",
           },
           { status: 400 }
         );
       }
 
-      return NextResponse.json(
-        {
-          ok: true,
-          message: "ユーザー情報を取得しました。",
-          body: user,
-        },
-        { status: 200 }
-      );
+      return NextResponse.json(user, { status: 200 });
     } catch (error) {
       return NextResponse.json(
         {
-          ok: false,
           message: "サーバーエラーが発生しました",
-          error_message: (error as Error).message, // 修正：エラーメッセージを返す
+          error: (error as Error).message, // 修正：エラーメッセージを返す
         },
         { status: 500 }
       );
@@ -107,7 +87,6 @@ export async function GET(req: NextRequest) {
   } else {
     return NextResponse.json(
       {
-        ok: false,
         message: "`scratch_id` または `scratch_username` を指定してください。",
       },
       { status: 400 }

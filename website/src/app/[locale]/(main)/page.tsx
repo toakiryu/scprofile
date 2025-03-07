@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import UserButton from "@/components/scratch-auth-component/ui/user-button";
+import UserButton from "@/components/scprofile/ui/user-button";
 
 function PagesHome() {
   return (

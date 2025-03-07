@@ -1,7 +1,5 @@
 "use client";
-
-import useScratchAuthUser from "@/hooks/useScratchAuthUser";
-import { scratchAuthLogin } from "../scripts/main";
+import { scratchAuthLogin } from "../../scratch-auth-component/scripts/main";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,10 +16,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { deleteCookie } from "cookies-next/client";
-import scratchAuthComponentConfig from "../../../../_config/scratch-auth-component.config";
+import useScProfileUser from "@/hooks/useScProfileUser";
+import sessionConfig from "../../../../_config/session.config";
 
 function UserButton() {
-  const { isLoading, user } = useScratchAuthUser();
+  const { isLoading, user } = useScProfileUser();
 
   if (isLoading) {
     return <div></div>;
@@ -37,11 +36,11 @@ function UserButton() {
                   src={user.profile.images["90x90"]}
                   alt={`@${user.id}`}
                 />
-                <AvatarFallback>{user.username}</AvatarFallback>
+                <AvatarFallback>{user.display_name}</AvatarFallback>
               </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
-              <DropdownMenuLabel>{user.username}</DropdownMenuLabel>
+              <DropdownMenuLabel>{user.display_name}</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
                 <DropdownMenuItem>
@@ -87,7 +86,7 @@ function UserButton() {
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() => {
-                  deleteCookie(scratchAuthComponentConfig.cookie_name);
+                  deleteCookie(sessionConfig.account_cookie_name);
                   window.location.reload();
                 }}
               >

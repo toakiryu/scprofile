@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
   if (!scratch_username) {
     return NextResponse.json(
       {
-        ok: false,
+        success: false,
         message: "`scratch_username` を指定してください。",
       },
       { status: 400 }
@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
   if (!display_name) {
     return NextResponse.json(
       {
-        ok: false,
+        success: false,
         message: "`display_name` を指定してください。",
       },
       { status: 400 }
@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
   try {
     try {
       const scratchUserInfo_res = await scratchUserInfo(scratch_username);
-      const userInfo = scratchUserInfo_res.body;
+      const userInfo = scratchUserInfo_res.data;
 
       // 新規ユーザーをSupabaseのusersテーブルに追加
       const { error } = await supabase.from("users").insert([
@@ -57,8 +57,9 @@ export async function POST(req: NextRequest) {
           if (error.message.includes("unique_scratch_id")) {
             return NextResponse.json(
               {
-                ok: false,
+                success: false,
                 message: "リクエストしたユーザーIDはすでに登録されています。",
+                error: error.message,
               },
               { status: 400 }
             );
@@ -68,24 +69,27 @@ export async function POST(req: NextRequest) {
         // error.message だけを返す
         return NextResponse.json(
           {
-            ok: false,
+            success: false,
             message: "ユーザー登録中にエラーが発生しました。",
-            error_message: error.message, // ここを修正
+            error: error.message,
           },
           { status: 500 }
         );
       }
 
       return NextResponse.json(
-        { ok: true, message: "ユーザー登録が成功しました。" },
+        {
+          success: true,
+          message: "ユーザー登録が成功しました。",
+        },
         { status: 201 }
       );
     } catch (error) {
       return NextResponse.json(
         {
-          ok: false,
+          success: false,
           message: "Scratchユーザー情報の取得に失敗しました。",
-          error_message: (error as Error).message, // エラーのメッセージ部分のみ返す
+          error: (error as Error).message, // エラーのメッセージ部分のみ返す
         },
         { status: 400 }
       );
@@ -93,9 +97,9 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     return NextResponse.json(
       {
-        ok: false,
+        success: false,
         message: "サーバーエラーが発生しました",
-        error_message: (error as Error).message, // エラーのメッセージ部分のみ返す
+        error: (error as Error).message, // エラーのメッセージ部分のみ返す
       },
       { status: 500 }
     );

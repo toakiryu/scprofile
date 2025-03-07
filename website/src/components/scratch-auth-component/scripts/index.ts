@@ -1,3 +1,4 @@
+import { ResultType } from "@/types/api";
 import crypto from "crypto";
 
 const SCRATCH_AUTH_COMPONENT_SECRET_KEY =
@@ -6,52 +7,18 @@ if (!SCRATCH_AUTH_COMPONENT_SECRET_KEY) {
   throw new Error("SCRATCH_AUTH_COMPONENT_SECRET_KEY is not defined!");
 }
 
-export interface ScratchAuthComponentActionResult<T> {
-  status: boolean;
-  message: string;
-  body: T | undefined;
-  error?: unknown;
-}
-
-export type ScratchUserType = {
-  id: number;
-  username: string;
-  scratchteam: boolean;
-  history: {
-    joined: string;
-  };
-  profile: {
-    id: number;
-    images: {
-      "90x90": string;
-      "60x60": string;
-      "55x55": string;
-      "50x50": string;
-      "32x32": string;
-    };
-    status: string;
-    bio: string;
-    country: string;
-  };
-};
-
 const ScratchAuthComponent = {
   action: {
-    calculateHmac: async (
-      text: string
-    ): Promise<ScratchAuthComponentActionResult<string>> => {
+    calculateHmac: async (text: string): Promise<ResultType<string>> => {
       return {
-        status: true,
-        message: "Calculated succeeded.",
-        body: crypto
+        success: true,
+        data: crypto
           .createHmac("sha256", SCRATCH_AUTH_COMPONENT_SECRET_KEY)
           .update(text)
           .digest("hex"),
       };
     },
-    encrypt: async (
-      text: string
-    ): Promise<ScratchAuthComponentActionResult<string>> => {
+    encrypt: async (text: string): Promise<ResultType<string>> => {
       try {
         const iv = crypto.randomBytes(12);
         const cipher = crypto.createCipheriv(
@@ -66,22 +33,18 @@ const ScratchAuthComponent = {
         const authTag = cipher.getAuthTag().toString("hex");
 
         return {
-          status: true,
-          message: "Encryption succeeded.",
-          body: `${iv.toString("hex")}:${encrypted}:${authTag}`,
+          success: true,
+          data: `${iv.toString("hex")}:${encrypted}:${authTag}`,
         };
       } catch (error) {
         return {
-          status: false,
+          success: false,
           message: "Encryption failed.",
-          error: error,
-          body: undefined,
+          error: (error as Error).message,
         };
       }
     },
-    decrypt: async (
-      text: string
-    ): Promise<ScratchAuthComponentActionResult<string>> => {
+    decrypt: async (text: string): Promise<ResultType<string>> => {
       try {
         const [iv, encrypted, authTag] = text.split(":");
         const decipher = crypto.createDecipheriv(
@@ -96,23 +59,21 @@ const ScratchAuthComponent = {
         decrypted += decipher.final("utf8");
 
         return {
-          status: true,
-          message: "Decryption succeeded.",
-          body: decrypted,
+          success: true,
+          data: decrypted,
         };
       } catch (error) {
         return {
-          status: false,
+          success: false,
           message: "Decryption failed",
-          error: error,
-          body: undefined,
+          error: (error as Error).message,
         };
       }
     },
     verifyToken: async (
       privateCode: string
     ): Promise<
-      ScratchAuthComponentActionResult<{
+      ResultType<{
         sessionId: string;
         data: {
           valid: boolean;
@@ -128,28 +89,24 @@ const ScratchAuthComponent = {
         const data = await res.json();
         if (data.valid === true) {
           const sessionId = crypto.randomUUID();
-          console.log(data);
           return {
-            status: true,
-            message: "Token authentication succeeded.",
-            body: {
+            success: true,
+            data: {
               sessionId: sessionId,
               data: data,
             },
           };
         } else {
           return {
-            status: false,
+            success: false,
             message: "VerifyToken Error",
-            body: undefined,
           };
         }
       } catch (error) {
         return {
-          status: false,
+          success: false,
           message: "VerifyToken Error",
-          error: error,
-          body: undefined,
+          error: (error as Error).message,
         };
       }
     },
@@ -158,7 +115,7 @@ const ScratchAuthComponent = {
       value: string,
       days: number
     ): Promise<
-      ScratchAuthComponentActionResult<{
+      ResultType<{
         name: string;
         value: string;
         options: {
@@ -172,7 +129,7 @@ const ScratchAuthComponent = {
         const encryptedRes = await ScratchAuthComponent.action.encrypt(
           value + "|" + hmac
         );
-        const encryptedValue = encryptedRes.body;
+        const encryptedValue = encryptedRes.data;
 
         if (encryptedValue) {
           const expires = new Date();
@@ -183,9 +140,8 @@ const ScratchAuthComponent = {
           }
 
           return {
-            status: true,
-            message: "Encryption succeeded.",
-            body: {
+            success: true,
+            data: {
               name: content,
               value: encryptedValue,
               options: {
@@ -196,44 +152,37 @@ const ScratchAuthComponent = {
           };
         } else {
           return {
-            status: false,
+            success: false,
             message: "Encryption failed.",
-            body: undefined,
           };
         }
       } catch (error) {
         return {
-          status: false,
-          message: `${error}`,
-          body: undefined,
+          success: false,
+          error: (error as Error).message,
         };
       }
     },
-    getUserName: async (
-      session: string
-    ): Promise<ScratchAuthComponentActionResult<string>> => {
+    getUserName: async (session: string): Promise<ResultType<string>> => {
       if (session) {
         const decryptedRes = await ScratchAuthComponent.action.decrypt(session);
-        const decrypted = decryptedRes.body;
+        const decrypted = decryptedRes.data;
         if (decrypted) {
           const [username] = decrypted.split("|");
           return {
-            status: true,
-            message: "Decryption succeeded.",
-            body: username,
+            success: true,
+            data: username,
           };
         } else {
           return {
-            status: false,
+            success: false,
             message: "Decryption failed.",
-            body: undefined,
           };
         }
       }
       return {
-        status: false,
+        success: false,
         message: "session is required.",
-        body: undefined,
       };
     },
   },
