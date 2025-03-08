@@ -1,6 +1,8 @@
+"use server";
+
+import React from "react";
 import { Metadata } from "next";
 import { getLocale } from "next-intl/server";
-import React from "react";
 import siteConfig from "../../../../../../_config/richtpl.config";
 
 export async function generateMetadata(props: {
@@ -8,48 +10,67 @@ export async function generateMetadata(props: {
     id: string;
   };
 }): Promise<Metadata> {
-  const { id } = await props.params;
+  const id = (await props.params).id;
+
+  let user;
+  const response = await getScprofileUserInfo({
+    scratch_username: id,
+  });
+  if (response.success) {
+    user = response.data;
+  } else {
+    console.error(response.message, response.error);
+  }
 
   const locale = await getLocale();
 
-  const title = "";
-  const openGraphTitle = `Users | ScProfile`;
+  const title = `${user?.scratch_username}`;
+  const openGraphTitle = `${user?.scratch_username} | ScProfile`;
 
-  const description = "";
+  const description =
+    user?.about ??
+    "ScProfileでは、Scratchアカウントを使って自分のプロフィールを作成することができます。";
 
-  return {
-    title: title,
-    description: description,
-    authors: [
-      { name: quizGroupInfo.authors.name, url: quizGroupInfo.authors.url },
-    ],
-    creator: quizGroupInfo.authors.name,
-    openGraph: {
-      type: "profile",
-      url: siteConfig.url,
-      siteName: "VEPQ",
-      title: openGraphTitle,
+  if (user) {
+    return {
+      title: title,
       description: description,
-      images:
-        siteConfig.themeConfig.metadata?.openGraph?.images ??
-        siteConfig.themeConfig.image,
-      locale:
-        siteConfig.themeConfig?.metadata?.openGraph?.locale ??
-        siteConfig.i18n.localeConfigs[locale].htmlLang ??
-        "ja-JP",
-    },
-    twitter: {
-      card: "summary",
-      site: `@toakiryu`,
-      title: openGraphTitle,
-      description: description,
-      creator: `@${quizGroupInfo.authors.twitter ?? "toakiryu"}`,
-      images:
-        siteConfig.themeConfig.metadata?.twitter?.images ??
-        siteConfig.themeConfig.image,
-    },
-  };
+      authors: [
+        {
+          name: user.scratch_username,
+          url: `https://scratch.mit.edu/users/${user.scratch_username}`,
+        },
+      ],
+      creator: user.display_name,
+      openGraph: {
+        type: "profile",
+        username: user.scratch_username,
+        url: siteConfig.url,
+        siteName: "ScProfile",
+        title: openGraphTitle,
+        description: description,
+        images: user.profile.images["90x90"],
+        locale:
+          siteConfig.themeConfig?.metadata?.openGraph?.locale ??
+          siteConfig.i18n.localeConfigs[locale].htmlLang ??
+          "ja-JP",
+      },
+      twitter: {
+        card: "summary",
+        site: `@toakiryu`,
+        title: openGraphTitle,
+        description: description,
+        creator: `@${user.scratch_username ?? "toakiryu"}`,
+        images: user.profile.images["90x90"],
+      },
+    };
+  }
+
+  return {};
 }
+
+import { getScprofileUserInfo } from "@/utils/scprofile/account";
+import UserProfilePreview from "./preview";
 
 async function PagesUserProfile({
   params,
@@ -57,8 +78,22 @@ async function PagesUserProfile({
   params: Promise<{ id: string }>;
 }) {
   const id = (await params).id;
-  console.log("> Request User ID:", id);
-  return <div>PagesUserProfile</div>;
+
+  let user;
+  const response = await getScprofileUserInfo({
+    scratch_username: id,
+  });
+  if (response.success) {
+    user = response.data;
+  } else {
+    console.error(response.message, response.error);
+  }
+
+  if (!user) {
+    return <div>ユーザーが存在しません。</div>;
+  }
+
+  return <UserProfilePreview user={user} />;
 }
 
 export default PagesUserProfile;

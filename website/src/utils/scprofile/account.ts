@@ -3,6 +3,8 @@
 import { getSession } from "@/components/scratch-auth-component/scripts/main";
 import { ResultNotDataType, ResultType } from "@/types/api";
 import { scprofileUserType } from "@/types/scprofile";
+import { cookies } from "next/headers";
+import sessionConfig from "../../../_config/session.config";
 
 type getScprofileUserInfoType = {
   user_id?: string;
@@ -33,7 +35,7 @@ export const getScprofileUserInfo = async ({
 
   try {
     const response = await fetch(
-      `${process.env.BASE_URL}/en/api/account/users?${searchParams}`
+      `${process.env.BASE_URL}/api/account/users?${searchParams}`
     );
     const resData: ResultType<scprofileUserType> = await response.json();
     if (resData.success) {
@@ -79,7 +81,7 @@ export const postScprofileUserSignup = async ({
 
   try {
     const response = await fetch(
-      `${process.env.BASE_URL}/en/api/account/signup`,
+      `${process.env.BASE_URL}/api/account/signup`,
       {
         method: "POST",
         body: JSON.stringify(body),
@@ -112,7 +114,7 @@ export const postScprofileUserSignin = async ({
 }): Promise<ResultType<boolean>> => {
   try {
     const response = await fetch(
-      `${process.env.BASE_URL}/en/api/account/signin`,
+      `${process.env.BASE_URL}/api/account/signin`,
       {
         method: "POST",
         body: JSON.stringify({
@@ -140,6 +142,28 @@ export const postScprofileUserSignin = async ({
   }
 };
 
+export const postScprofileUserSignout = async (): Promise<
+  ResultType<boolean>
+> => {
+  try {
+    const cookieStore = await cookies();
+
+    // セッション情報を削除
+    cookieStore.delete(sessionConfig.account_cookie_name);
+
+    return {
+      success: true,
+      message: "ログアウトに成功しました。",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: "ログアウトに失敗しました。",
+      error: error instanceof Error ? error.message : "Unknown error",
+    };
+  }
+};
+
 export const putScprofileUserUpdate = async ({
   updates,
 }: {
@@ -159,7 +183,7 @@ export const putScprofileUserUpdate = async ({
 
     // APIリクエストを送信
     const response = await fetch(
-      `${process.env.BASE_URL}/en/api/account/update`,
+      `${process.env.BASE_URL}/api/account/update`,
       {
         method: "PUT",
         headers: {
@@ -188,6 +212,53 @@ export const putScprofileUserUpdate = async ({
     return {
       success: false,
       message: "ScProfileアカウント情報の更新に失敗しました。",
+      error: (error as Error).message,
+    };
+  }
+};
+
+export const deleteScprofileUserDelete = async (): Promise<
+  ResultType<boolean>
+> => {
+  try {
+    // セッションを取得
+    const session = await getSession();
+
+    if (!session.success) {
+      return {
+        success: false,
+        message: session.message,
+        error: session.error,
+      };
+    }
+
+    // APIリクエストを送信
+    const response = await fetch(`${process.env.BASE_URL}/api/account`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        session: session.data, // sessionのデータのみ渡す
+      }),
+    });
+
+    const resData: ResultNotDataType = await response.json();
+
+    if (resData.success) {
+      return {
+        success: true,
+      };
+    } else {
+      return {
+        success: false,
+        message: resData.message,
+      };
+    }
+  } catch (error) {
+    return {
+      success: false,
+      message: "ScProfileアカウントの削除に失敗しました。",
       error: (error as Error).message,
     };
   }

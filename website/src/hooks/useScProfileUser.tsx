@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 import { deleteCookie } from "cookies-next/client";
 import { scprofileUserType } from "@/types/scprofile";
 import { scratchAuthCheckSession } from "@/components/scratch-auth-component/scripts/main";
+import { getScprofileUserInfo } from "@/utils/scprofile/account";
 import sessionConfig from "../../_config/session.config";
+import { addEventListenerByName } from "@/utils/eventHandler";
 
 function useScProfileUser() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -31,17 +33,12 @@ function useScProfileUser() {
     }
 
     if (account_username) {
-      try {
-        const get_userInfo_res = await fetch(
-          `/en/api/account/users?scratch_username=${account_username}`
-        );
-        const get_userInfo = await get_userInfo_res.json();
-        if (get_userInfo.success) {
-          setUser(get_userInfo.data);
-        } else {
-          setError(get_userInfo.error);
-        }
-      } catch (error) {
+      const response = await getScprofileUserInfo({
+        scratch_username: account_username,
+      });
+      if (response.success && response.data) {
+        setUser(response.data);
+      } else {
         deleteCookie(sessionConfig.account_cookie_name);
         setError(error);
       }
@@ -51,6 +48,14 @@ function useScProfileUser() {
 
   useEffect(() => {
     getScProfileUserLoad();
+
+    const cleanup = addEventListenerByName("scprofile-update", () => {
+      getScProfileUserLoad();
+    });
+
+    return () => {
+      cleanup();
+    };
   }, []);
 
   return { isLoading, error, user, getScProfileUserLoad };

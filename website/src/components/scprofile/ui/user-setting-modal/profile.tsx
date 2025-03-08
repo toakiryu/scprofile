@@ -27,10 +27,8 @@ import {
 import { putScprofileUserUpdate } from "@/utils/scprofile/account";
 import { toast } from "sonner";
 import { IconLoader2 } from "@tabler/icons-react";
-
-const formSchema = z.object({
-  display_name: z.string().min(2).max(10),
-});
+import { useTranslations } from "next-intl";
+import { dispatchEventByName } from "@/utils/eventHandler";
 
 function UserSettingModalTabContentProfile({
   tab,
@@ -39,7 +37,16 @@ function UserSettingModalTabContentProfile({
   tab: string;
   user: scprofileUserType;
 }) {
+  const t = useTranslations("user-setting-modal");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const formSchema = z.object({
+    display_name: z
+      .string()
+      .min(2, t("tabs.profile.items.display_name.validation.min2"))
+      .max(10, t("tabs.profile.items.display_name.validation.max10")),
+  });
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -51,11 +58,10 @@ function UserSettingModalTabContentProfile({
     setIsLoading(true);
     const response = await putScprofileUserUpdate({ updates: values });
     if (response.success) {
-      toast.success(
-        "変更内容をを保存しました。反映には時間がかかる可能性がります。"
-      );
+      toast.success(t("tabs.profile.toast.success"));
+      dispatchEventByName("scprofile-update")
     } else {
-      toast.error("変更内容の保存に失敗しました。");
+      toast.error(t("tabs.profile.toast.error"));
       console.error(response.message, response.error);
     }
     setIsLoading(false);
@@ -64,8 +70,8 @@ function UserSettingModalTabContentProfile({
   return (
     <TabsContent tab={tab} value="profile">
       <TabContentHeader
-        title="Profile"
-        description="これは、サイト上で他のユーザーからあなたがどのように見えるかを示します。"
+        title={t("tabs.profile.title")}
+        description={t("tabs.profile.description")}
       />
       <Form {...form}>
         <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
@@ -73,21 +79,23 @@ function UserSettingModalTabContentProfile({
             <ItemLabel>Scratch ID</ItemLabel>
             <Input defaultValue={user.scratch_id} disabled />
             <ItemDescription>
-              この項目を変更することは出来ません。
+              {t("field.description.read-only")}
             </ItemDescription>
           </ItemGroup>
           <ItemGroup>
-            <ItemLabel>Scratch Username</ItemLabel>
+            <ItemLabel>
+              {t("tabs.profile.items.scratch_username.label")}
+            </ItemLabel>
             <Input defaultValue={user.scratch_username} disabled />
             <ItemDescription>
-              この項目を変更することは出来ません。
+              {t("field.description.read-only")}
             </ItemDescription>
           </ItemGroup>
           <ItemGroup>
             <ItemLabel>ScProfile ID</ItemLabel>
             <Input defaultValue={user.id} disabled />
             <ItemDescription>
-              この項目を変更することは出来ません。
+              {t("field.description.read-only")}
             </ItemDescription>
           </ItemGroup>
           <ItemGroup>
@@ -96,12 +104,16 @@ function UserSettingModalTabContentProfile({
               name="display_name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Display Name</FormLabel>
+                  <FormLabel>
+                    {t("tabs.profile.items.display_name.label")}
+                  </FormLabel>
                   <FormControl>
                     <Input placeholder="User_0000" {...field} />
                   </FormControl>
                   <FormDescription>
-                    この項目は <em>ScProfile</em> アカウントの表示名です。
+                    {t.rich("tabs.profile.items.display_name.description", {
+                      em: (chunks) => <em>{chunks}</em>,
+                    })}
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -110,7 +122,7 @@ function UserSettingModalTabContentProfile({
           </ItemGroup>
           <Button type="submit" disabled={isLoading}>
             {isLoading && <IconLoader2 className="animate-spin" />}
-            変更内容を保存
+            {t("save-changes")}
           </Button>
         </form>
       </Form>

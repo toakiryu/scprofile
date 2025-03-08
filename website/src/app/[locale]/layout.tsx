@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
 // config
@@ -16,15 +15,173 @@ import { routing } from "@/i18n/routing";
 import { Toaster } from "sonner";
 
 import { ThemeProvider } from "next-themes";
+import LoadingOverlay from "@/components/LoadingOverlay";
+
+import localFont from "next/font/local";
+import {
+  Geist,
+  Geist_Mono,
+  Dela_Gothic_One,
+  M_PLUS_Rounded_1c,
+} from "next/font/google";
+import "yakuhanjp";
+import { cn } from "@/lib/utils";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: "swap",
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: "swap",
+});
+
+// https://fonts.google.com/specimen/Dela+Gothic+One
+const delaGothicOne = Dela_Gothic_One({
+  variable: "--font-dela-gothic-one",
+  weight: "400",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+// https://fonts.google.com/specimen/M+PLUS+Rounded+1c
+const mPlusRounded1c = M_PLUS_Rounded_1c({
+  variable: "--font-m-plus-rounded-1c",
+  weight: ["100", "300", "400", "500", "700", "800", "900"],
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const IBM_Plex_Sans_JP = localFont({
+  variable: "--font-ibm-plex-sans-jp",
+  src: [
+    {
+      path: "../../../public/wp-content/fonts/IBMPlexSansJP-Thin.ttf",
+      weight: "100",
+      style: "thin",
+    },
+    {
+      path: "../../../public/wp-content/fonts/IBMPlexSansJP-ExtraLight.ttf",
+      weight: "200",
+      style: "extralight",
+    },
+    {
+      path: "../../../public/wp-content/fonts/IBMPlexSansJP-Light.ttf",
+      weight: "300",
+      style: "light",
+    },
+    {
+      path: "../../../public/wp-content/fonts/IBMPlexSansJP-Normal.ttf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../../../public/wp-content/fonts/IBMPlexSansJP-Medium.ttf",
+      weight: "500",
+      style: "medium",
+    },
+    {
+      path: "../../../public/wp-content/fonts/IBMPlexSansJP-SemiBold.ttf",
+      weight: "600",
+      style: "semibold",
+    },
+    {
+      path: "../../../public/wp-content/fonts/IBMPlexSansJP-Bold.ttf",
+      weight: "700",
+      style: "bold",
+    },
+  ],
+  display: "swap",
+});
+
+const Helvetica_Neue = localFont({
+  variable: "--font-helvetica-neue",
+  src: [
+    {
+      path: "../../../public/wp-content/fonts/HelveticaNeue-UltraLight.otf",
+      weight: "100",
+      style: "normal",
+    },
+    {
+      path: "../../../public/wp-content/fonts/HelveticaNeue-UltraLightItalic.otf",
+      weight: "100",
+      style: "italic",
+    },
+    {
+      path: "../../../public/wp-content/fonts/HelveticaNeue-Thin.otf",
+      weight: "200",
+      style: "normal",
+    },
+    {
+      path: "../../../public/wp-content/fonts/HelveticaNeue-ThinItalic.otf",
+      weight: "200",
+      style: "italic",
+    },
+    {
+      path: "../../../public/wp-content/fonts/HelveticaNeue-Light.otf",
+      weight: "300",
+      style: "normal",
+    },
+    {
+      path: "../../../public/wp-content/fonts/HelveticaNeue-LightItalic.otf",
+      weight: "300",
+      style: "italic",
+    },
+    {
+      path: "../../../public/wp-content/fonts/HelveticaNeue-Roman.otf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../../../public/wp-content/fonts/HelveticaNeue-Italic.ttf",
+      weight: "400",
+      style: "italic",
+    },
+    {
+      path: "../../../public/wp-content/fonts/HelveticaNeue-Medium.otf",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../../../public/wp-content/fonts/HelveticaNeue-MediumItalic.otf",
+      weight: "500",
+      style: "italic",
+    },
+    {
+      path: "../../../public/wp-content/fonts/HelveticaNeue-Bold.otf",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "../../../public/wp-content/fonts/HelveticaNeue-BoldItalic.otf",
+      weight: "700",
+      style: "italic",
+    },
+    {
+      path: "../../../public/wp-content/fonts/HelveticaNeue-Heavy.otf",
+      weight: "800",
+      style: "normal",
+    },
+    {
+      path: "../../../public/wp-content/fonts/HelveticaNeue-HeavyItalic.otf",
+      weight: "800",
+      style: "italic",
+    },
+    {
+      path: "../../../public/wp-content/fonts/HelveticaNeue-Black.otf",
+      weight: "900",
+      style: "normal",
+    },
+    {
+      path: "../../../public/wp-content/fonts/HelveticaNeue-BlackItalic.otf",
+      weight: "900",
+      style: "italic",
+    },
+  ],
+  display: "swap",
 });
 
 export type LayoutProps = {
@@ -149,7 +306,10 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} suppressHydrationWarning>
       <body
-        className={`relative w-full h-full overflow-x-clip ${geistSans.variable} ${geistMono.variable} antialiased scroll-smooth`}
+        className={cn(
+          "relative w-full h-full overflow-x-clip font-main antialiased scroll-smooth",
+          `${geistSans.variable} ${geistMono.variable} ${delaGothicOne.variable} ${mPlusRounded1c.variable} ${IBM_Plex_Sans_JP.variable} ${Helvetica_Neue.variable}`
+        )}
         suppressHydrationWarning
       >
         <ThemeProvider
@@ -160,7 +320,8 @@ export default async function LocaleLayout({
         >
           <NextIntlClientProvider messages={messages}>
             <main className="w-full h-full">{children}</main>
-            <Toaster richColors/>
+            <Toaster richColors />
+            <LoadingOverlay />
           </NextIntlClientProvider>
         </ThemeProvider>
       </body>

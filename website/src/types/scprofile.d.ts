@@ -4,6 +4,12 @@ export type scprofileConfigType = {
   cookie_name: string;
 };
 
+export type scprofileUserProfileStatusType = {
+  type: "text" | "link";
+  label: string;
+  value: string;
+};
+
 export type scprofileUserType = {
   id: UUID; // Supabase標準のUUID（主キー）
   scratch_username: string; // Scratchのユーザー名（変更不可）
@@ -14,7 +20,6 @@ export type scprofileUserType = {
   joined_at: timestamp; // Scratchの参加日
   created_at: timestamp; // アカウント作成日時
   updated_at: timestamp; // 最後にプロフィールを更新した日時
-  public_profile: boolean; // プロフィール公開設定
   profile: {
     images: {
       "90x90": string;
@@ -26,4 +31,13 @@ export type scprofileUserType = {
   };
   premium: boolean; // 有料プランかどうか
   premium_expires_at: string | null; // 有料プランの期限
+  public_profile: boolean; // プロフィール公開設定
+  status: scprofileUserProfileStatusType[]; // プロフィールステータス
+  about: string | null; // 概要
+};
+
+export type scprofileUserProfileType = {
+  public_profile: boolean; // プロフィール公開設定
+  status: scprofileUserProfileStatusType[]; // プロフィールステータス
+  about: string | null; // 概要
 };

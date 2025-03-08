@@ -15,6 +15,7 @@ import { TabsTrigger } from "./user-setting-modal/_tab";
 import UserSettingModalTabContentProfile from "./user-setting-modal/profile";
 import UserSettingModalTabContentAccount from "./user-setting-modal/account";
 import UserSettingModalTabContentSecurity from "./user-setting-modal/security";
+import { useTranslations } from "next-intl";
 
 const ScProfileUserSettingModal = ({
   onOpen,
@@ -27,6 +28,7 @@ const ScProfileUserSettingModal = ({
   children?: React.ReactNode;
   user: scprofileUserType;
 }) => {
+  const t = useTranslations("user-setting-modal");
   const [tab, setTab] = useState<string>("profile");
 
   return (
@@ -34,20 +36,20 @@ const ScProfileUserSettingModal = ({
       {children && <DialogTrigger asChild>{children}</DialogTrigger>}
       <DialogContent className="w-full max-w-full sm:max-w-[900px] max-h-[calc(100dvh-100px)] overflow-hidden">
         <DialogHeader>
-          <DialogTitle>Account Setting</DialogTitle>
+          <DialogTitle>{t("account-setting")}</DialogTitle>
           <DialogDescription />
         </DialogHeader>
         <div className="flex flex-col lg:flex-row gap-5 lg:gap-0 overflow-hidden">
           <aside className="overflow-auto">
             <nav className="flex flex-row lg:flex-col p-1">
               <TabsTrigger tab={tab} setTab={setTab} value="profile">
-                Profile
+                {t("tabs.profile.title")}
               </TabsTrigger>
               <TabsTrigger tab={tab} setTab={setTab} value="account">
-                Account
+                {t("tabs.account.title")}
               </TabsTrigger>
               <TabsTrigger tab={tab} setTab={setTab} value="security">
-                Security
+                {t("tabs.security.title")}
               </TabsTrigger>
             </nav>
           </aside>

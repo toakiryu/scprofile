@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @plugin 'tailwindcss-animate';
 
@@ -73,6 +73,15 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(0.274 0.006 286.033);
   --sidebar-ring: oklch(0.442 0.017 285.786);
+}
+
+@theme {
+  --font-dela-gothic-one: var(--font-dela-gothic-one);
+  --font-m-plus-rounded1c: var(--font-m-plus-rounded-1c);
+  --font-yakuhanjp: YakuHanJP, sans-serif;
+  --font-main: YakuHanJP, "IBM Plex Sans JP", -apple-system,
+    BlinkMacSystemFont, "Helvetica Neue", YuGothic, "ヒラギノ角ゴ ProN W3",
+    Hiragino Kaku Gothic ProN, Arial, "メイリオ", Meiryo, sans-serif;
 }
 
 @theme inline {

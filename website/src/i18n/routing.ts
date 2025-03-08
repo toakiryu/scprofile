@@ -12,7 +12,12 @@ export const routing = defineRouting({
 
   localePrefix: siteConfig.i18n.localePrefix,
 
-  localeDetection: false,
+  // pathnames: {
+  //   "/account/auth": {
+  //     ja: "/account/auth",
+  //     en: "/en/account/auth",
+  //   },
+  // },
 });
 
 export type Locale = (typeof routing.locales)[number];
