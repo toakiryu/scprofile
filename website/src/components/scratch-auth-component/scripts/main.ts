@@ -33,6 +33,34 @@ export async function scratchAuthSessionGetUserName(
   }
 }
 
+export async function getSession(
+  cookie_name?: string
+): Promise<ResultType<string>> {
+  const response = await getCookie(
+    cookie_name || sessionConfig.account_cookie_name
+  );
+  if (response) {
+    const res = await ScratchAuthComponent.action.getUserName(response.value);
+    if (res.data) {
+      return {
+        success: true,
+        data: response.value,
+      };
+    } else {
+      await deleteCookie(sessionConfig.account_cookie_name);
+      return {
+        success: false,
+        message: "Failed to retrieve session. Could not decrypt session.",
+      };
+    }
+  } else {
+    return {
+      success: false,
+      message: "Cookie does not exist.",
+    };
+  }
+}
+
 // セッションが存在するか確認
 export async function scratchAuthCheckSession({
   cookie_name,

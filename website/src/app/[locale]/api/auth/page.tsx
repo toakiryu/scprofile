@@ -12,8 +12,8 @@ import { toast } from "sonner";
 import { setCookie } from "cookies-next/client";
 import {
   getScprofileUserInfo,
-  getScprofileUserSignin,
-  getScprofileUserSignup,
+  postScprofileUserSignin,
+  postScprofileUserSignup,
 } from "@/utils/scprofile/account";
 import sessionConfig from "../../../../../_config/session.config";
 
@@ -30,7 +30,7 @@ export default function AuthPage() {
       path: string;
     };
   }) => {
-    const signin = await getScprofileUserSignin({
+    const signin = await postScprofileUserSignin({
       session: session.value,
     });
     if (signin.success) {
@@ -115,7 +115,7 @@ export default function AuthPage() {
 
       // STEP 4. ScProfileアカウントの作成
       if (!myAccount) {
-        const response = await getScprofileUserSignup({
+        const response = await postScprofileUserSignup({
           scratch_username: scratch_username,
         });
         if (response.success) {

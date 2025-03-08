@@ -1,5 +1,6 @@
 "use server";
 
+import { getSession } from "@/components/scratch-auth-component/scripts/main";
 import { ResultNotDataType, ResultType } from "@/types/api";
 import { scprofileUserType } from "@/types/scprofile";
 
@@ -55,7 +56,7 @@ export const getScprofileUserInfo = async ({
   }
 };
 
-export const getScprofileUserSignup = async ({
+export const postScprofileUserSignup = async ({
   scratch_username,
   display_name,
 }: {
@@ -104,7 +105,7 @@ export const getScprofileUserSignup = async ({
   }
 };
 
-export const getScprofileUserSignin = async ({
+export const postScprofileUserSignin = async ({
   session,
 }: {
   session: string;
@@ -134,6 +135,59 @@ export const getScprofileUserSignin = async ({
     return {
       success: false,
       message: "ScProfileアカウントへのログインに失敗しました。",
+      error: (error as Error).message,
+    };
+  }
+};
+
+export const putScprofileUserUpdate = async ({
+  updates,
+}: {
+  updates: { [key: string]: any };
+}): Promise<ResultType<boolean>> => {
+  try {
+    // セッションを取得
+    const session = await getSession();
+
+    if (!session.success) {
+      return {
+        success: false,
+        message: session.message,
+        error: session.error,
+      };
+    }
+
+    // APIリクエストを送信
+    const response = await fetch(
+      `${process.env.BASE_URL}/en/api/account/update`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          session: session.data, // sessionのデータのみ渡す
+          updates: updates,
+        }),
+      }
+    );
+
+    const resData: ResultNotDataType = await response.json();
+
+    if (resData.success) {
+      return {
+        success: true,
+      };
+    } else {
+      return {
+        success: false,
+        message: resData.message,
+      };
+    }
+  } catch (error) {
+    return {
+      success: false,
+      message: "ScProfileアカウント情報の更新に失敗しました。",
       error: (error as Error).message,
     };
   }

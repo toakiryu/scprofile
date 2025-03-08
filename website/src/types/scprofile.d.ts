@@ -23,10 +23,6 @@ export type scprofileUserType = {
       "50x50": string;
       "32x32": string;
     };
-    status: string; // ステータスメッセージ
-    bio: string; // 自己紹介
-    country: string; // 国（ISO 3166-1 alpha-2）
-    avatar_url: string; // アイコンURL（Scratchのアイコンを取得）
   };
   premium: boolean; // 有料プランかどうか
   premium_expires_at: string | null; // 有料プランの期限
