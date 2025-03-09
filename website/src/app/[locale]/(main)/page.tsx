@@ -1,13 +1,18 @@
-"use client";
-
 import React from "react";
-import UserButton from "@/components/scprofile/ui/user-button";
+import SectionsHero from "@/components/sections/hero";
+import SectionsFeature from "@/components/sections/feature";
+import SectionsPricing from "@/components/sections/pricing";
+import SectionTeam from "@/components/sections/team";
+import SectionsFaq from "@/components/sections/faq";
 
-function PagesHome() {
+async function PagesHome() {
   return (
     <div>
-      PagesHome
-      <UserButton />
+      <SectionsHero />
+      <SectionsFeature />
+      <SectionsPricing />
+      <SectionTeam />
+      <SectionsFaq />
     </div>
   );
 }

@@ -2,6 +2,8 @@
 
 @plugin 'tailwindcss-animate';
 
+@config "../../../tailwind.config.ts";
+
 @custom-variant dark (&:is(.dark *));
 
 :root {
@@ -79,8 +81,8 @@
   --font-dela-gothic-one: var(--font-dela-gothic-one);
   --font-m-plus-rounded1c: var(--font-m-plus-rounded-1c);
   --font-yakuhanjp: YakuHanJP, sans-serif;
-  --font-main: YakuHanJP, "IBM Plex Sans JP", -apple-system,
-    BlinkMacSystemFont, "Helvetica Neue", YuGothic, "ヒラギノ角ゴ ProN W3",
+  --font-main: YakuHanJP, "IBM Plex Sans JP", -apple-system, BlinkMacSystemFont,
+    "Helvetica Neue", YuGothic, "ヒラギノ角ゴ ProN W3",
     Hiragino Kaku Gothic ProN, Arial, "メイリオ", Meiryo, sans-serif;
 }
 

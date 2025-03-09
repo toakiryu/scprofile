@@ -26,6 +26,8 @@ import { toast } from "sonner";
 import { putScprofileUserUpdate } from "@/utils/scprofile/account";
 import { IconLoader2 } from "@tabler/icons-react";
 import { useRouter } from "@/i18n/routing";
+import { useTheme } from "next-themes";
+import { cn } from "@/lib/utils";
 const MarkdownEditor = dynamic(
   () => import("@uiw/react-markdown-editor").then((mod) => mod.default),
   { ssr: false }
@@ -42,6 +44,8 @@ function ProfileEditPage() {
     { type: "text", label: "X(Twitter)", value: "@scratch" },
     { type: "link", label: "Website", value: "https://scratch.mit.edu/" },
   ]);
+
+  const { theme } = useTheme();
 
   useEffect(() => {
     if (userLoading === false) {
@@ -104,11 +108,9 @@ function ProfileEditPage() {
     });
     if (response.success) {
       toast.success("変更内容を保存しました。");
-      return;
     } else {
       console.error(response.message, response.error);
       toast.error("変更内容の保存に失敗しました。");
-      return;
     }
     setIsLoading(false);
   };
@@ -133,10 +135,15 @@ function ProfileEditPage() {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center w-full h-full min-h-dvh sm:p-5">
-      <div className="relative flex flex-col sm:flex-row container max-w-5xl w-full h-full sm:h-[calc(100dvh-100px)] pt-[200px] mx-auto sm:rounded-3xl sm:border-2 shadow-md overflow-auto">
-        <div className="absolute -z-10 top-0 left-0 w-full h-[350px] bg-center bg-cover bg-[url(/wp-content/uploads/scratch-logo.png)]" />
-        <div className="sm:absolute bg-neutral-900 w-[250px] h-full sm:h-[calc(100dvh-(300px+4px))] p-5 rounded-tr-[150px]">
+    <div className="flex flex-col justify-start sm:justify-center items-center w-full h-full min-h-dvh sm:p-5">
+      <div className="relative flex flex-col sm:flex-row container max-w-5xl w-full h-full sm:h-[calc(100dvh-100px)] pt-[30vh] sm:pt-[200px] mx-auto sm:rounded-3xl sm:border-2 shadow-md overflow-auto">
+        <div className="absolute -z-10 top-0 left-0 w-full h-[35vh] sm:h-[350px] bg-center bg-cover bg-[url(/wp-content/uploads/scratch-logo.png)]" />
+        <div
+          className={cn(
+            "relative sm:absolute bg-neutral-100 dark:bg-neutral-900 w-full sm:w-[250px] h-full sm:h-[calc(100dvh-(300px+4px))] p-5 sm:rounded-tr-[150px]",
+            "sm:after:hidden after:absolute after:-top-[50%] after:left-0 after:w-full after:h-[50%] after:bg-gradient-to-b after:from-transparent after:to-neutral-900"
+          )}
+        >
           <div className="flex flex-col">
             <Avatar className="w-36 h-36 mx-auto mt-10 border">
               <AvatarImage src={user?.profile.images["90x90"]} />
@@ -195,7 +202,7 @@ function ProfileEditPage() {
           </div>
         </div>
         <div className="w-full h-full sm:h-[calc(100dvh-(300px+4px))] sm:ml-[250px]">
-          <div className="bg-neutral-900 w-full h-full sm:h-[calc(100dvh-(300px+4px+46px+150px))] p-5 sm:mt-[150px] border-l border-t overflow-auto">
+          <div className="bg-neutral-100 dark:bg-neutral-900 w-full h-full sm:h-[calc(100dvh-(300px+4px+46px+150px))] p-5 sm:mt-[150px] border-l border-t overflow-auto">
             <div className="flex flex-col gap-3">
               <div className="flex flex-col">
                 <h1 className="font-bold text-6xl">{user?.display_name}</h1>
@@ -213,21 +220,24 @@ function ProfileEditPage() {
                   <TabsContent value="editor">
                     <MarkdownEditor
                       value={about || undefined}
+                      enablePreview={false}
                       onChange={(e) => setAbout(e)}
-                      className="!bg-neutral-900"
                     />
                   </TabsContent>
                   <TabsContent value="preview">
                     <MarkdownPreview
-                      className="!bg-neutral-900"
+                      className="bg-neutral-100! dark:bg-neutral-900!"
                       source={about || undefined}
+                      wrapperElement={{
+                        "data-color-mode": theme as "light" | "dark",
+                      }}
                     />
                   </TabsContent>
                 </Tabs>
               </div>
             </div>
           </div>
-          <div className="bg-neutral-900 sm:bg-neutral-900/30 w-full h-[46px] p-3 border-l border-t">
+          <div className="bg-neutral-100 dark:bg-neutral-900 sm:bg-neutral-100/30 dark:sm:bg-neutral-900/30 w-full h-[46px] p-3 border-l border-t">
             <div className="flex justify-center items-center">
               <span className="text-sm">Powered by ScProfile</span>
             </div>

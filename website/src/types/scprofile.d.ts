@@ -41,3 +41,9 @@ export type scprofileUserProfileType = {
   status: scprofileUserProfileStatusType[]; // プロフィールステータス
   about: string | null; // 概要
 };
+
+export type scprofileStatsType = {
+  totalUsers: number;
+  premiumUsers: number;
+  publicProfiles: number;
+};

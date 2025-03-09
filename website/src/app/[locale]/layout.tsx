@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "../../css/wmde-markdown.css";
 
 // config
 import config from "../../../_config/richtpl.config";
@@ -26,6 +27,9 @@ import {
 } from "next/font/google";
 import "yakuhanjp";
 import { cn } from "@/lib/utils";
+import Header from "@/components/header";
+import Banner from "@/components/banner";
+import Footer from "@/components/footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -319,9 +323,12 @@ export default async function LocaleLayout({
           {...config.themeConfig.colorMode.custom}
         >
           <NextIntlClientProvider messages={messages}>
-            <main className="w-full h-full">{children}</main>
-            <Toaster richColors />
             <LoadingOverlay />
+            <Banner />
+            <Header />
+            <main className="relative w-full h-full">{children}</main>
+            <Footer />
+            <Toaster richColors />
           </NextIntlClientProvider>
         </ThemeProvider>
       </body>

@@ -35,6 +35,10 @@ export async function generateMetadata(props: {
     return {
       title: title,
       description: description,
+      icons: {
+        icon: user.profile.images["90x90"],
+        apple: user.profile.images["90x90"],
+      },
       authors: [
         {
           name: user.scratch_username,

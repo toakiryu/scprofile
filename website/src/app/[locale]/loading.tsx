@@ -7,7 +7,7 @@ function Loading() {
     <div className="bg-white dark:bg-black fixed z-999999999999 top-0 left-0 flex justify-center items-center w-full h-full">
       <div className="container max-w-5xl mx-auto relative overflow-hidden">
         <div className="items-center text-center">
-          <h1 className="font-dela-gothic-one text-black dark:bg-white text-lg sm:text-xl md:text-2xl lg:text-3xl mb-5">
+          <h1 className="font-dela-gothic-one text-white dark:text-black text-lg sm:text-xl md:text-2xl lg:text-3xl mb-5">
             ScProfile
           </h1>
           <motion.div

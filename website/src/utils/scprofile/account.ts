@@ -2,7 +2,7 @@
 
 import { getSession } from "@/components/scratch-auth-component/scripts/main";
 import { ResultNotDataType, ResultType } from "@/types/api";
-import { scprofileUserType } from "@/types/scprofile";
+import { scprofileStatsType, scprofileUserType } from "@/types/scprofile";
 import { cookies } from "next/headers";
 import sessionConfig from "../../../_config/session.config";
 
@@ -80,13 +80,10 @@ export const postScprofileUserSignup = async ({
   }
 
   try {
-    const response = await fetch(
-      `${process.env.BASE_URL}/api/account/signup`,
-      {
-        method: "POST",
-        body: JSON.stringify(body),
-      }
-    );
+    const response = await fetch(`${process.env.BASE_URL}/api/account/signup`, {
+      method: "POST",
+      body: JSON.stringify(body),
+    });
     const resData: ResultNotDataType = await response.json();
     if (resData.success) {
       return {
@@ -113,15 +110,12 @@ export const postScprofileUserSignin = async ({
   session: string;
 }): Promise<ResultType<boolean>> => {
   try {
-    const response = await fetch(
-      `${process.env.BASE_URL}/api/account/signin`,
-      {
-        method: "POST",
-        body: JSON.stringify({
-          session: session,
-        }),
-      }
-    );
+    const response = await fetch(`${process.env.BASE_URL}/api/account/signin`, {
+      method: "POST",
+      body: JSON.stringify({
+        session: session,
+      }),
+    });
     const resData: ResultNotDataType = await response.json();
     if (resData.success) {
       return {
@@ -182,19 +176,16 @@ export const putScprofileUserUpdate = async ({
     }
 
     // APIリクエストを送信
-    const response = await fetch(
-      `${process.env.BASE_URL}/api/account/update`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          session: session.data, // sessionのデータのみ渡す
-          updates: updates,
-        }),
-      }
-    );
+    const response = await fetch(`${process.env.BASE_URL}/api/account/update`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        session: session.data, // sessionのデータのみ渡す
+        updates: updates,
+      }),
+    });
 
     const resData: ResultNotDataType = await response.json();
 
@@ -206,6 +197,7 @@ export const putScprofileUserUpdate = async ({
       return {
         success: false,
         message: resData.message,
+        error: resData.error,
       };
     }
   } catch (error) {
@@ -259,6 +251,32 @@ export const deleteScprofileUserDelete = async (): Promise<
     return {
       success: false,
       message: "ScProfileアカウントの削除に失敗しました。",
+      error: (error as Error).message,
+    };
+  }
+};
+
+export const getScProfileStats = async (): Promise<
+  ResultType<scprofileStatsType>
+> => {
+  try {
+    const response = await fetch(`${process.env.BASE_URL}/api/scprofile/stats`);
+    const data = await response.json();
+    if (data.success) {
+      return {
+        success: true,
+        data: data.data,
+      };
+    } else {
+      return {
+        success: false,
+        message: data.message,
+      };
+    }
+  } catch (error) {
+    return {
+      success: false,
+      message: "統計情報の取得に失敗しました。",
       error: (error as Error).message,
     };
   }
