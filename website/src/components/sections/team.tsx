@@ -1,3 +1,7 @@
+"use client";
+
+import { useTranslations } from "next-intl";
+
 const people = [
   {
     name: "Toa Kiryu",
@@ -7,16 +11,17 @@ const people = [
 ];
 
 export default function SectionTeam() {
+  const t = useTranslations("sections.team");
   return (
     <section id="team">
       <div className="py-24 sm:py-32">
         <div className="mx-auto grid max-w-7xl gap-20 px-6 lg:px-8 xl:grid-cols-3">
           <div className="max-w-xl">
             <h2 className="text-3xl font-semibold tracking-tight text-pretty text-gray-900 dark:text-gray-100 sm:text-4xl">
-              サービスの運営チーム
+              {t("title")}
             </h2>
             <p className="mt-6 text-lg/8 text-gray-600 dark:text-gray-400">
-              私たちは、仕事に情熱を持ち、クライアントに最高の結果をもたらすことに全力を尽く集団または個人です。
+              {t("description")}
             </p>
           </div>
           <ul

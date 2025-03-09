@@ -3,13 +3,13 @@
 import React, { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "@/i18n/routing";
+import { toast } from "sonner";
+import { setCookie } from "cookies-next/client";
+import { dispatchEventByName } from "@/utils/eventHandler";
 import {
   scratchAuthSessionGetUserName,
   setScratchAuthSession,
 } from "@/components/scratch-auth-component/scripts/main";
-import { toast } from "sonner";
-
-import { setCookie } from "cookies-next/client";
 import {
   getScprofileUserInfo,
   postScprofileUserSignin,
@@ -38,12 +38,13 @@ export default function AuthPage() {
         path: session.options.path,
         expires: session.options.expires,
       });
+      dispatchEventByName("scprofile-update");
       toast.success("ScProfileアカウントにログインしました。");
       router.push("/");
       return;
     } else {
       console.error(signin.message, signin.error);
-      toast.success("ScProfileアカウントにログインしました。");
+      toast.error("ScProfileアカウントのログインに失敗しました。");
       router.push("/");
       return;
     }

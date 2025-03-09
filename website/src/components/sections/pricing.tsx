@@ -1,43 +1,48 @@
-import { IconCheck } from "@tabler/icons-react";
+"use client";
 
-const tiers = [
-  {
-    name: "趣味",
-    id: "tier-hobby",
-    href: "#",
-    priceMonthly: "$0",
-    description: "サービスを初めてご利用になる場合に最適なプランです。",
-    features: [
-      "アカウントの作成",
-      "一件のプロフィールページ",
-      "ログイン履歴の保存",
-      "サポート対応",
-    ],
-    featured: false,
-  },
-  {
-    name: "プロ",
-    id: "tier-pro",
-    href: "#",
-    priceMonthly: "$3",
-    description: "自分好みにカスタマイズしたい方に最適なプランです。",
-    features: [
-      "プライベートプロフィール",
-      "プロフィールページにBGMの設定",
-      "ベータ機能へのアクセス",
-      "高度な分析",
-      "専任サポート担当者",
-      "カスタムドメイン",
-    ],
-    featured: true,
-  },
-];
+import { IconCheck } from "@tabler/icons-react";
+import { useTranslations } from "next-intl"; // ローカリゼーションのためにnext-intlを使用
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
 
 export default function SectionsPricing() {
+  const t = useTranslations("sections.pricing");
+
+  const tiers = [
+    {
+      name: t("tiers.hobby.name"),
+      id: "tier-hobby",
+      href: "#",
+      priceMonthly: t("tiers.hobby.priceMonthly"),
+      description: t("tiers.hobby.description"),
+      features: [
+        t("tiers.hobby.features.0"),
+        t("tiers.hobby.features.1"),
+        t("tiers.hobby.features.2"),
+        t("tiers.hobby.features.3"),
+      ],
+      featured: false,
+    },
+    {
+      name: t("tiers.pro.name"),
+      id: "tier-pro",
+      href: "#",
+      priceMonthly: t("tiers.pro.priceMonthly"),
+      description: t("tiers.pro.description"),
+      features: [
+        t("tiers.pro.features.0"),
+        t("tiers.pro.features.1"),
+        t("tiers.pro.features.2"),
+        t("tiers.pro.features.3"),
+        t("tiers.pro.features.4"),
+        t("tiers.pro.features.5"),
+      ],
+      featured: true,
+    },
+  ];
+
   return (
     <section id="pricing">
       <div className="relative isolate px-6 py-24 sm:py-32 lg:px-8">
@@ -55,14 +60,14 @@ export default function SectionsPricing() {
         </div>
         <div className="mx-auto max-w-4xl text-center">
           <h2 className="text-base/7 font-semibold text-indigo-600 dark:text-indigo-400">
-            価格
+            {t("title")}
           </h2>
           <p className="mt-2 text-5xl font-semibold tracking-tight text-balance text-gray-900 dark:text-gray-100 sm:text-6xl">
-            あなたにぴったりのプランをお選びください
+            {t("description")}
           </p>
         </div>
         <p className="mx-auto mt-6 max-w-2xl text-center text-lg font-medium text-pretty text-gray-600 dark:text-gray-400 sm:text-xl/8">
-          カスタマイズ機能が満載の、 お手頃価格のプランをお選びください。
+          {t("cta")}
         </p>
         <div className="mx-auto mt-16 grid max-w-lg grid-cols-1 items-center gap-y-6 sm:mt-20 sm:gap-y-0 lg:max-w-4xl lg:grid-cols-2">
           {tiers.map((tier, tierIdx) => (
@@ -145,7 +150,7 @@ export default function SectionsPricing() {
                   "mt-8 block rounded-md px-3.5 py-2.5 text-center text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 sm:mt-10"
                 )}
               >
-                今すぐ始めましょう
+                {t("cta")}
               </a>
             </div>
           ))}

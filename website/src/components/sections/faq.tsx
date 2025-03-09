@@ -1,11 +1,16 @@
+"use client";
+
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { useTranslations } from "next-intl";
 
 export default function SectionsFaq() {
+  const t = useTranslations("sections.faq");
+
   return (
     <section id="faq">
       <div className="relative isolate px-6 py-24 sm:py-32 lg:px-8">
@@ -23,7 +28,7 @@ export default function SectionsFaq() {
         </div>
         <div className="mx-auto max-w-4xl text-center">
           <h1 className="mt-2 text-5xl font-semibold tracking-tight text-balance text-gray-900 dark:text-gray-100 sm:text-6xl">
-            よくある質問
+            {t("title")}
           </h1>
           <Accordion
             type="single"
@@ -32,29 +37,28 @@ export default function SectionsFaq() {
           >
             <AccordionItem value="item-1">
               <AccordionTrigger className="font-bold text-xl">
-                無料で利用できますか？
+                {t("faq.0.title")}
               </AccordionTrigger>
-              <AccordionContent>
-                はい、このサービスは完全無料で利用できます。
-              </AccordionContent>
+              <AccordionContent>{t("faq.0.content")}</AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-2">
               <AccordionTrigger className="font-bold text-xl">
-                Scratcher である必要はありますか？
+                {t("faq.1.title")}
               </AccordionTrigger>
               <AccordionContent>
-                いいえ、<em>New Scratcher</em> または <em>Scratcher</em>{" "}
-                どちらでも問題なく利用可能です。
+                {t.rich("faq.1.content", {
+                  em: (chunks) => <em>{chunks}</em>,
+                })}
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-3">
               <AccordionTrigger className="font-bold text-xl">
-                プロフィールを非公開にすることは出来ますか？
+                {t("faq.2.title")}
               </AccordionTrigger>
               <AccordionContent>
-                この機能は、 <em>趣味プラン</em> ではご利用できません。
-                <em>Proプラン</em>{" "}
-                にアップグレードすることでこの機能を利用することが出来るようになります。
+                {t.rich("faq.2.content", {
+                  em: (chunks) => <em>{chunks}</em>,
+                })}
               </AccordionContent>
             </AccordionItem>
           </Accordion>

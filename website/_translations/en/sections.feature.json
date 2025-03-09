@@ -1,0 +1,20 @@
+{
+  "sections.feature": {
+    "title": "Create Your Profile Easily",
+    "description": "ScProfile is a profile creation service for Scratch users. By simply linking your Scratch account, you can easily create your own profile page.",
+    "features": {
+      "0": {
+        "name": "Easy Registration with Scratch Account",
+        "description": "With ScProfile, you can create your profile page by simply linking your Scratch account. No need to create a new account."
+      },
+      "1": {
+        "name": "Fully Customizable",
+        "description": "You can change the design and background of your profile to create a unique page just for you. More customization options will be added in the future."
+      },
+      "2": {
+        "name": "Easily Showcase Your Scratch Projects",
+        "description": "You can display the projects you've created on Scratch on your profile page, allowing visitors to see them instantly."
+      }
+    }
+  }
+}

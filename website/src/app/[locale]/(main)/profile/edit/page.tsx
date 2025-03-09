@@ -28,6 +28,7 @@ import { IconLoader2 } from "@tabler/icons-react";
 import { useRouter } from "@/i18n/routing";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
+import { scratchAuthLogin } from "@/components/scratch-auth-component/scripts/main";
 const MarkdownEditor = dynamic(
   () => import("@uiw/react-markdown-editor").then((mod) => mod.default),
   { ssr: false }
@@ -54,7 +55,7 @@ function ProfileEditPage() {
         setStatus(user?.status);
         return;
       } else {
-        router.replace("/");
+        scratchAuthLogin()
         return;
       }
     }

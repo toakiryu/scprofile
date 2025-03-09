@@ -1,0 +1,19 @@
+{
+  "sections.faq": {
+    "title": "Frequently Asked Questions",
+    "faq": {
+      "0": {
+        "title": "Is it free to use?",
+        "content": "Yes, this service is completely free to use."
+      },
+      "1": {
+        "title": "Do I need to be a Scratcher?",
+        "content": "No, both <em>New Scratcher</em> and <em>Scratcher</em> users can use it without any issues."
+      },
+      "2": {
+        "title": "Can I make my profile private?",
+        "content": "This feature is not available on the <em>Hobby plan</em>. Upgrading to the <em>Pro plan</em> will enable this feature."
+      }
+    }
+  }
+}

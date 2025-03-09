@@ -1,24 +1,25 @@
-import React from "react";
+"use client";
+
+import { useTranslations } from "next-intl";
 import { IconBrush, IconCloudUpload, IconServer } from "@tabler/icons-react";
 
 export default function SectionsFeature() {
+  const t = useTranslations("sections.feature");
+
   const features = [
     {
-      name: "Scratch アカウントで簡単登録",
-      description:
-        "ScProfile は Scratch のアカウントと連携するだけでプロフィールページを作成できます。新たにアカウントを作成する必要はありません。",
+      name: t("features.0.name"),
+      description: t("features.0.description"),
       icon: IconCloudUpload,
     },
     {
-      name: "自由にカスタマイズ",
-      description:
-        "プロフィールのデザインや背景を変更し、自分だけの個性的なページを作成できます。将来的にはさらに多くのカスタマイズオプションを追加予定。",
+      name: t("features.1.name"),
+      description: t("features.1.description"),
       icon: IconBrush,
     },
     {
-      name: "Scratch プロジェクトを簡単に紹介",
-      description:
-        "あなたが Scratch で制作したプロジェクトをプロフィールページに掲載し、訪れた人にすぐに見てもらえるようになります。",
+      name: t("features.2.name"),
+      description: t("features.2.description"),
       icon: IconServer,
     },
   ];
@@ -31,16 +32,10 @@ export default function SectionsFeature() {
             <div className="lg:pt-4 lg:pr-8">
               <div className="lg:max-w-lg">
                 <h2 className="text-base/7 font-semibold text-indigo-600 dark:text-indigo-400">
-                  プロフィールを簡単に作成
+                  {t("title")}
                 </h2>
                 <p className="mt-2 text-4xl font-semibold tracking-tight text-pretty text-gray-900 dark:text-gray-100 sm:text-5xl">
-                  あなたの Scratch 活動をもっと魅力的に
-                </p>
-                <p className="mt-6 text-lg/8 text-gray-600 dark:text-gray-400">
-                  ScProfile は、Scratch
-                  ユーザーのためのプロフィール作成サービスです。 Scratch
-                  アカウントと連携するだけで、あなただけのプロフィールページを簡単に作成できます。
-                  プロジェクトや自己紹介を自由にカスタマイズし、あなたの活動をもっと魅力的に発信しましょう。
+                  {t("description")}
                 </p>
                 <dl className="mt-10 max-w-xl space-y-8 text-base/7 text-gray-600 dark:text-gray-400 lg:max-w-none">
                   {features.map((feature) => (
