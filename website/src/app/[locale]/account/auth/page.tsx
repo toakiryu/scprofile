@@ -40,7 +40,7 @@ export default function AuthPage() {
       });
       dispatchEventByName("scprofile-update");
       toast.success("ScProfileアカウントにログインしました。");
-      router.push("/");
+      window.location.href = "/";
       return;
     } else {
       console.error(signin.message, signin.error);
