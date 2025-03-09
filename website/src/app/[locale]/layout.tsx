@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import "../../css/wmde-markdown.css";
+import "../../css/githubMarkdown.css";
 
 // config
 import config from "../../../_config/richtpl.config";
