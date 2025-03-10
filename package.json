@@ -7,7 +7,6 @@
     "build": "npm run clear && node ./job/mergeTranslations.js && next build",
     "start": "npm run clear && next start",
     "lint": "next lint",
-    "clear": "./rmgomi.sh && clear",
     "mergeTranslations": "node ./job/mergeTranslations.js"
   },
   "dependencies": {
