@@ -1,11 +1,15 @@
 import { ResultType } from "@/types/api";
 import crypto from "crypto";
 
-const SCRATCH_AUTH_COMPONENT_SECRET_KEY =
+let SCRATCH_AUTH_COMPONENT_SECRET_KEY =
   process.env.SCRATCH_AUTH_COMPONENT_SECRET_KEY;
-if (!SCRATCH_AUTH_COMPONENT_SECRET_KEY) {
-  throw new Error("SCRATCH_AUTH_COMPONENT_SECRET_KEY is not defined!");
+if (process.env.BASE_URL) {
+  if (!SCRATCH_AUTH_COMPONENT_SECRET_KEY) {
+    throw new Error("SCRATCH_AUTH_COMPONENT_SECRET_KEY is not defined!");
+  }
 }
+SCRATCH_AUTH_COMPONENT_SECRET_KEY =
+  process.env.SCRATCH_AUTH_COMPONENT_SECRET_KEY!;
 
 const ScratchAuthComponent = {
   action: {

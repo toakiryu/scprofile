@@ -189,14 +189,12 @@ const Helvetica_Neue = localFont({
   display: "swap",
 });
 
-export type LayoutProps = {
-  locale: string;
-};
-
-export async function generateMetadata(props: {
-  params: LayoutProps;
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
-  const { locale } = await props.params;
+  const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "metadata" });
 
   const header = await headers();
@@ -297,9 +295,9 @@ export default async function LocaleLayout({
   params,
 }: Readonly<{
   children: React.ReactNode;
-  params: LayoutProps;
+  params: { locale: string };
 }>) {
-  const { locale } = await params;
+  const { locale } = params;
   if (!routing.locales.includes(locale as any)) {
     notFound();
   }
