@@ -1,16 +1,17 @@
-"use server";
-
 import React from "react";
 import { Metadata } from "next";
 import { getLocale } from "next-intl/server";
+import { redirect } from "@/i18n/routing";
+import { getScprofileUserInfo } from "@/utils/scprofile/account";
+import UserProfilePreview from "./preview";
 import siteConfig from "../../../../../../_config/richtpl.config";
 
-export async function generateMetadata(props: {
-  params: {
-    id: string;
-  };
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
 }): Promise<Metadata> {
-  const id = (await props.params).id;
+  const { id } = await params;
 
   let user;
   const response = await getScprofileUserInfo({
@@ -73,17 +74,13 @@ export async function generateMetadata(props: {
   return {};
 }
 
-import { getScprofileUserInfo } from "@/utils/scprofile/account";
-import UserProfilePreview from "./preview";
-import { redirect } from "@/i18n/routing";
-
-async function PagesUserProfile({
+export default async function PagesUserProfile({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
   const locale = await getLocale();
-  const id = (await params).id;
 
   let user;
   const response = await getScprofileUserInfo({
@@ -105,5 +102,3 @@ async function PagesUserProfile({
 
   return <UserProfilePreview user={user} />;
 }
-
-export default PagesUserProfile;

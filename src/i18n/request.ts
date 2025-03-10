@@ -1,7 +1,7 @@
-import config from "../../_config/richtpl.config";
+import { AbstractIntlMessages } from "next-intl";
 import { getRequestConfig } from "next-intl/server";
-import { routing } from "./routing";
 import deepmerge from "deepmerge";
+import { routing } from "./routing";
 import siteConfig from "../../_config/richtpl.config";
 
 export default getRequestConfig(async ({ requestLocale }) => {
@@ -9,11 +9,12 @@ export default getRequestConfig(async ({ requestLocale }) => {
   let locale = await requestLocale;
 
   // Ensure that a valid locale is used
-  if (!locale || !config.i18n.locales.includes(locale as any)) {
+  if (!locale || !siteConfig.i18n.locales.includes(locale as any)) {
     locale = routing.defaultLocale;
   }
 
-  const userMessages = (await import(`../../.translations/${locale}.json`)).default;
+  const userMessages = (await import(`../../.translations/${locale}.json`))
+    .default;
   const defaultMessages = (
     await import(`../../.translations/${siteConfig.i18n.defaultLocale}.json`)
   ).default;
@@ -21,6 +22,6 @@ export default getRequestConfig(async ({ requestLocale }) => {
 
   return {
     locale,
-    messages: messages,
+    messages: messages as AbstractIntlMessages,
   };
 });
