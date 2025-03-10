@@ -15,6 +15,7 @@ import {
   postScprofileUserSignup,
 } from "@/utils/scprofile/account";
 import sessionConfig from "../../../../../_config/session.config";
+import { IconLoader2 } from "@tabler/icons-react";
 
 export default function AuthPage() {
   const router = useRouter();
@@ -135,8 +136,13 @@ export default function AuthPage() {
   }, [router, privateCode]);
 
   return (
-    <div className="flex justify-center items-center w-full h-full min-h-[calc(100dvh-64px)]">
-      スクラッチアカウントの認証...
+    <div className="flex justify-center items-center w-full h-full min-h-dvh">
+      <div className="flex flex-col items-center">
+        <h1 className="font-black font-dela-gothic-one text-3xl mb-5">
+          ScProfile
+        </h1>
+        <IconLoader2 size={50} className="animate-spin" />
+      </div>
     </div>
   );
 }
