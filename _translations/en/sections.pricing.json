@@ -1,0 +1,35 @@
+{
+  "sections.pricing": {
+    "title": "Pricing",
+    "description": "Choose the plan that's perfect for you, packed with customization features at an affordable price.",
+    "cta": "Get Started Now",
+    "tiers": {
+      "hobby": {
+        "name": "Hobby",
+        "id": "tier-hobby",
+        "priceMonthly": "$0",
+        "description": "The perfect plan for those using the service for the first time.",
+        "features": {
+          "0": "Account creation",
+          "1": "One profile page",
+          "2": "Login history tracking",
+          "3": "Support"
+        }
+      },
+      "pro": {
+        "name": "Pro",
+        "id": "tier-pro",
+        "priceMonthly": "$3",
+        "description": "The best plan for those who want to customize their profile to the fullest.",
+        "features": {
+          "0": "Private profile",
+          "1": "BGM setting for profile page",
+          "2": "Access to beta features",
+          "3": "Advanced analytics",
+          "4": "Dedicated support",
+          "5": "Custom domain"
+        }
+      }
+    }
+  }
+}

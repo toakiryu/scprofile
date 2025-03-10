@@ -1,0 +1,10 @@
+{
+  "sections.hero": {
+    "ctaText": "Create your own profile!",
+    "readMore": "Read more",
+    "headline": "Your personal profile page for Scratch users",
+    "description": "A service that allows Scratch users to easily create their own profile page. You can link your Scratch account and display activity information, introductions, and created projects. It also offers customization features to create a more attractive profile page.",
+    "getStarted": "Get Started",
+    "details": "Learn More"
+  }
+}

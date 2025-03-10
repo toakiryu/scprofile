@@ -1,0 +1,15 @@
+"use client";
+
+import React from "react";
+import { scprofileUserType } from "@/types/scprofile";
+import ScProfileProfilePreview from "@/components/scprofile/ui/profile-preview";
+
+function UserProfilePreview({ user }: { user: scprofileUserType }) {
+  return (
+    <div className="flex flex-col justify-start sm:justify-center items-center w-full h-full min-h-dvh sm:p-5">
+      <ScProfileProfilePreview user={user} />
+    </div>
+  );
+}
+
+export default UserProfilePreview;

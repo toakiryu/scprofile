@@ -1,0 +1,97 @@
+{
+  "user-setting-modal": {
+    "profile": "プロフィール",
+    "profile-edit": "プロフィールを編集",
+    "setting": "設定",
+    "login": "ログイン",
+    "logout": "ログアウト",
+    "account-setting": "アカウント設定",
+    "save-changes": "変更内容を保存",
+    "tabs": {
+      "profile": {
+        "title": "プロフィール",
+        "description": "これは、サイト上で他のユーザーからあなたがどのように見えるかを示します。",
+        "toast": {
+          "success": "変更内容をを保存しました。反映には時間がかかる可能性がります。",
+          "error": "変更内容の保存に失敗しました。"
+        },
+        "items": {
+          "scratch_username": {
+            "label": "Scratchユーザー名"
+          },
+          "display_name": {
+            "label": "表示名",
+            "description": "この項目は <em>ScProfile</em> アカウントの表示名です。",
+            "validation": {
+              "min2": "文字列には少なくとも 2 文字が必要です。",
+              "max10": "文字列は最大10文字までです。"
+            }
+          }
+        }
+      },
+      "account": {
+        "title": "アカウント",
+        "description": "アカウント設定を更新します。",
+        "items": {
+          "admin": {
+            "label": "アカウントロール",
+            "option": {
+              "true": "管理者",
+              "false": "一般"
+            }
+          },
+          "premium": {
+            "label": "利用プラン",
+            "option": {
+              "true": "プレミアム",
+              "false": "無料"
+            }
+          },
+          "premium_expires_at": {
+            "label": "Premiumプランの期限",
+            "option": {
+              "null": "無期限"
+            }
+          },
+          "joined_at": {
+            "label": "Scratch参加日"
+          },
+          "created_at": {
+            "label": "ScProfileアカウント作成日"
+          },
+          "updated_at": {
+            "label": "最終変更日時"
+          },
+          "account_delete": {
+            "label": "アカウントの削除",
+            "description": "アカウントの削除を取り消すことは出来ません。",
+            "button": "アカウントを削除する",
+            "toast": {
+              "success": "アカウントを削除しました。反映には時間がかかる可能性があります。",
+              "warning": "ログアウトに失敗しました。",
+              "error": "アカウントの削除に失敗しました。"
+            },
+            "validation": {
+              "min1": "アカウント名を入力してください。",
+              "refine": "アカウント名が一致しません。"
+            }
+          }
+        }
+      },
+      "security": {
+        "title": "セキュリティー",
+        "description": "セキュリティーの設定を更新します。",
+        "items": {
+          "last_login_at": {
+            "label": "最終ログイン日時"
+          }
+        }
+      }
+    },
+    "field": {
+      "description": {
+        "read-only": "この項目を変更することは出来ません。"
+      }
+    }
+  }
+}

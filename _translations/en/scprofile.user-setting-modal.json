@@ -1,0 +1,97 @@
+{
+  "user-setting-modal": {
+    "profile": "Profile",
+    "profile-edit": "Profile Edit",
+    "setting": "Setting",
+    "login": "Login",
+    "logout": "Logout",
+    "account-setting": "Account Settings",
+    "save-changes": "Save Changes",
+    "tabs": {
+      "profile": {
+        "title": "Profile",
+        "description": "This shows how you appear to other users on the site.",
+        "toast": {
+          "success": "Changes saved successfully. It may take some time to reflect.",
+          "error": "Failed to save changes."
+        },
+        "items": {
+          "scratch_username": {
+            "label": "Scratch Username"
+          },
+          "display_name": {
+            "label": "Display Name",
+            "description": "This item is the display name of your <em>ScProfile</em> account.",
+            "validation": {
+              "min2": "String must contain at least 2 character(s)",
+              "max10": "String must contain at most 10 character(s)"
+            }
+          }
+        }
+      },
+      "account": {
+        "title": "Account",
+        "description": "Update your account settings.",
+        "items": {
+          "admin": {
+            "label": "Account Role",
+            "option": {
+              "true": "Admin",
+              "false": "General"
+            }
+          },
+          "premium": {
+            "label": "Subscription Plan",
+            "option": {
+              "true": "Premium",
+              "false": "Free"
+            }
+          },
+          "premium_expires_at": {
+            "label": "Premium Plan Expiration",
+            "option": {
+              "null": "Unlimited"
+            }
+          },
+          "joined_at": {
+            "label": "Scratch Join Date"
+          },
+          "created_at": {
+            "label": "ScProfile Account Creation Date"
+          },
+          "updated_at": {
+            "label": "Last Updated At"
+          },
+          "account_delete": {
+            "label": "Delete Account",
+            "description": "Account deletion cannot be undone.",
+            "button": "Delete Account",
+            "toast": {
+              "success": "Account deleted. Changes may take some time to reflect.",
+              "warning": "Logout failed.",
+              "error": "Account deletion failed."
+            },
+            "validation": {
+              "min1": "Please enter your account name.",
+              "refine": "Account name does not match."
+            }
+          }
+        }
+      },
+      "security": {
+        "title": "Security",
+        "description": "Update your security settings.",
+        "items": {
+          "last_login_at": {
+            "label": "Last Login At"
+          }
+        }
+      }
+    },
+    "field": {
+      "description": {
+        "read-only": "This field cannot be changed."
+      }
+    }
+  }
+}
