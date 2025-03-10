@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { ScratchAuthComponent } from "./";
+import { ScratchAuthComponent } from ".";
 import type { ScratchAuthSessionType, ScratchUserType } from "./type";
 import scratchAuthComponentConfig from "../../../../_config/scratch-auth-component.config";
 import { ResultType } from "@/types/api";

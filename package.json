@@ -1,9 +1,9 @@
 {
-  "name": "nextjs-rich-tpl",
+  "name": "scprofile",
   "version": "15.2.0",
   "private": true,
   "scripts": {
-    "dev": "node ./job/mergeTranslations.js && next dev",
+    "dev": "./rmgomi.sh && clear && node ./job/mergeTranslations.js && next dev",
     "build": "npm run clear && node ./job/mergeTranslations.js && next build",
     "start": "npm run clear && next start",
     "lint": "next lint",
