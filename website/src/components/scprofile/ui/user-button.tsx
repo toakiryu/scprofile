@@ -42,7 +42,7 @@ function UserButton() {
 
   const t = useTranslations("user-setting-modal");
 
-  const { user } = useScProfileUser();
+  const { isLoading, user } = useScProfileUser();
   const [userSettingModalOnOpen, setUserSettingModalOnOpen] =
     useState<boolean>(false);
 
@@ -70,110 +70,116 @@ function UserButton() {
 
   return (
     <div>
-      {user && (
-        <ScProfileUserSettingModal
-          onOpen={userSettingModalOnOpen}
-          onOpenChange={setUserSettingModalOnOpen}
-          user={user}
-        />
-      )}
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Avatar className="border rounded-full">
-            <AvatarImage src={user?.profile.images["90x90"]} />
-            <AvatarFallback>MY</AvatarFallback>
-          </Avatar>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-56">
-          <DropdownMenuLabel>
-            {user?.display_name || "My Account"}
-          </DropdownMenuLabel>
+      {isLoading ? (
+        <Skeleton className="w-[30px] h-[30px] border rounded-full" />
+      ) : (
+        <>
           {user && (
-            <>
+            <ScProfileUserSettingModal
+              onOpen={userSettingModalOnOpen}
+              onOpenChange={setUserSettingModalOnOpen}
+              user={user}
+            />
+          )}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Avatar className="border rounded-full">
+                <AvatarImage src={user?.profile.images["90x90"]} />
+                <AvatarFallback>MY</AvatarFallback>
+              </Avatar>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56">
+              <DropdownMenuLabel>
+                {user?.display_name || "My Account"}
+              </DropdownMenuLabel>
+              {user && (
+                <>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuGroup>
+                    <Link href={`/users/${user.scratch_username}`}>
+                      <DropdownMenuItem>{t("profile")}</DropdownMenuItem>
+                    </Link>
+                    <Link href="/profile/edit">
+                      <DropdownMenuItem>{t("profile-edit")}</DropdownMenuItem>
+                    </Link>
+                    <DropdownMenuItem
+                      onClick={() => setUserSettingModalOnOpen(true)}
+                    >
+                      {t("setting")}
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                </>
+              )}
               <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                <Link href={`/users/${user.scratch_username}`}>
-                  <DropdownMenuItem>{t("profile")}</DropdownMenuItem>
-                </Link>
-                <Link href="/profile/edit">
-                  <DropdownMenuItem>{t("profile-edit")}</DropdownMenuItem>
-                </Link>
+              {user ? (
                 <DropdownMenuItem
-                  onClick={() => setUserSettingModalOnOpen(true)}
+                  onClick={() => {
+                    deleteCookie(sessionConfig.account_cookie_name);
+                    window.location.reload();
+                  }}
                 >
-                  {t("setting")}
+                  {t("logout")}
                 </DropdownMenuItem>
-              </DropdownMenuGroup>
-            </>
-          )}
-          <DropdownMenuSeparator />
-          {user ? (
-            <DropdownMenuItem
-              onClick={() => {
-                deleteCookie(sessionConfig.account_cookie_name);
-                window.location.reload();
-              }}
-            >
-              {t("logout")}
-            </DropdownMenuItem>
-          ) : (
-            <DropdownMenuItem
-              onClick={() => {
-                scratchAuthLogin();
-              }}
-            >
-              {t("login")}
-            </DropdownMenuItem>
-          )}
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={toggleColorMode}
-            className="border px-2 py-1 my-2"
-          >
-            <ClientOnly fallback={<Skeleton className="w-6 h-6" />}>
-              <button
-                aria-label="toggle color mode"
-                className="flex justify-center items-center rounded-lg"
-                suppressContentEditableWarning
-                suppressHydrationWarning
+              ) : (
+                <DropdownMenuItem
+                  onClick={() => {
+                    scratchAuthLogin();
+                  }}
+                >
+                  {t("login")}
+                </DropdownMenuItem>
+              )}
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={toggleColorMode}
+                className="border px-2 py-1 my-2"
               >
-                {theme === "light" ? (
-                  <>
-                    <IconMoon className="mr-1" />
-                    Dark
-                  </>
-                ) : (
-                  <>
-                    <IconSun className="mr-1" />
-                    Light
-                  </>
-                )}
-              </button>
-            </ClientOnly>
-          </DropdownMenuItem>
-          <DropdownMenuItem className="border p-0 my-2">
-            <Select
-              disabled={isPending}
-              defaultValue={locale}
-              onValueChange={onSelectChange}
-            >
-              <SelectTrigger className="w-full h-full border-none px-2 py-1">
-                <SelectValue placeholder="Select a Locale" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Language</SelectLabel>
-                  {routing.locales.map((locale, index) => (
-                    <SelectItem key={index} value={locale}>
-                      {siteConfig.i18n.localeConfigs[locale].label}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+                <ClientOnly fallback={<Skeleton className="w-6 h-6" />}>
+                  <button
+                    aria-label="toggle color mode"
+                    className="flex justify-center items-center rounded-lg"
+                    suppressContentEditableWarning
+                    suppressHydrationWarning
+                  >
+                    {theme === "light" ? (
+                      <>
+                        <IconMoon className="mr-1" />
+                        Dark
+                      </>
+                    ) : (
+                      <>
+                        <IconSun className="mr-1" />
+                        Light
+                      </>
+                    )}
+                  </button>
+                </ClientOnly>
+              </DropdownMenuItem>
+              <DropdownMenuItem className="border p-0 my-2">
+                <Select
+                  disabled={isPending}
+                  defaultValue={locale}
+                  onValueChange={onSelectChange}
+                >
+                  <SelectTrigger className="w-full h-full border-none px-2 py-1">
+                    <SelectValue placeholder="Select a Locale" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Language</SelectLabel>
+                      {routing.locales.map((locale, index) => (
+                        <SelectItem key={index} value={locale}>
+                          {siteConfig.i18n.localeConfigs[locale].label}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </>
+      )}
     </div>
   );
 }

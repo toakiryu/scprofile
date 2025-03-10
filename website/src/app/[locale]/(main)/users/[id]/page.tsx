@@ -75,12 +75,14 @@ export async function generateMetadata(props: {
 
 import { getScprofileUserInfo } from "@/utils/scprofile/account";
 import UserProfilePreview from "./preview";
+import { redirect } from "@/i18n/routing";
 
 async function PagesUserProfile({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const locale = await getLocale();
   const id = (await params).id;
 
   let user;
@@ -94,7 +96,11 @@ async function PagesUserProfile({
   }
 
   if (!user) {
-    return <div>ユーザーが存在しません。</div>;
+    redirect({
+      href: "/",
+      locale,
+    });
+    return;
   }
 
   return <UserProfilePreview user={user} />;

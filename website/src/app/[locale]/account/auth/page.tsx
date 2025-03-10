@@ -5,7 +5,6 @@ import { useSearchParams } from "next/navigation";
 import { useRouter } from "@/i18n/routing";
 import { toast } from "sonner";
 import { setCookie } from "cookies-next/client";
-import { dispatchEventByName } from "@/utils/eventHandler";
 import {
   scratchAuthSessionGetUserName,
   setScratchAuthSession,
@@ -38,9 +37,9 @@ export default function AuthPage() {
         path: session.options.path,
         expires: session.options.expires,
       });
-      dispatchEventByName("scprofile-update");
       toast.success("ScProfileアカウントにログインしました。");
       window.location.href = "/";
+      // dispatchEventByName("scprofile-update");
       return;
     } else {
       console.error(signin.message, signin.error);
