@@ -2,7 +2,7 @@ import { ScratchAuthComponentConfigType } from "@/components/scratch-auth-compon
 
 const scratchAuthComponentConfig: ScratchAuthComponentConfigType = {
   cookie_name: "_scratch-auth-component-session",
-  redirect_url: `http://localhost:3000/account/auth`,
+  redirect_url: `${process.env.BASE_URL}/account/auth`,
   title: `ScProfile`,
   expiration: 30,
 };
