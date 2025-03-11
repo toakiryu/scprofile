@@ -32,6 +32,7 @@ import { toast } from "sonner";
 import { IconLoader2 } from "@tabler/icons-react";
 import { useFormatter, useTranslations } from "next-intl";
 import { dispatchEventByName } from "@/utils/eventHandler";
+import { sendGAEvent } from "@next/third-parties/google";
 
 function AccountDelete({ user }: { user: scprofileUserType }) {
   const t = useTranslations("user-setting-modal");
@@ -60,6 +61,9 @@ function AccountDelete({ user }: { user: scprofileUserType }) {
     if (response.success) {
       const res = await postScprofileUserSignout();
       if (res.success) {
+        sendGAEvent("event", "user_setting_save", {
+          value: "account",
+        });
         toast.success(t("tabs.account.items.account_delete.toast.success"));
         dispatchEventByName("scprofile-update");
         window.location.reload();

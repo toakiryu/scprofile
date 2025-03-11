@@ -11,18 +11,27 @@ import { useFormatter } from "next-intl";
 import { useTheme } from "next-themes";
 import { ClientOnly } from "@/components/ui/client-only";
 import { Skeleton } from "@/components/ui/skeleton";
+import { sendGAEvent } from "@next/third-parties/google";
 
 export default function ScProfileProfilePreview({
   user,
   loading,
+  analyticsEvent,
 }: {
   user?: scprofileUserType;
   loading?: boolean;
+  analyticsEvent?: boolean;
 }) {
   const format = useFormatter();
   const { theme } = useTheme();
 
   const [isLoading, setIsLoading] = React.useState<boolean>(loading || !user);
+
+  useEffect(() => {
+    if (analyticsEvent) {
+      sendGAEvent("event", "profile_view", { value: user?.scratch_username });
+    }
+  }, [analyticsEvent]);
 
   useEffect(() => {
     if (loading) {

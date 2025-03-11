@@ -18,7 +18,7 @@ import { cn } from "@/lib/utils";
 
 import { Toaster } from "sonner";
 
-import { GoogleAnalytics } from "@next/third-parties/google";
+import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
 
 import localFont from "next/font/local";
 import {
@@ -308,9 +308,11 @@ export default async function LocaleLayout({
   // side is the easiest way to get started
   const messages = await getMessages();
 
+  const GA_ID = process.env.GA_ID || "";
   return (
     <html lang={locale} suppressHydrationWarning>
-      <GoogleAnalytics gaId={process.env.GA_ID || ""} />
+      <GoogleTagManager gtmId={GA_ID} />
+      <GoogleAnalytics gaId={GA_ID} />
       <body
         className={cn(
           "relative w-full h-full overflow-x-clip font-main antialiased scroll-smooth",

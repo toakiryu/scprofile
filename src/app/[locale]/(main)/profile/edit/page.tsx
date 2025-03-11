@@ -30,6 +30,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { sendGAEvent } from "@next/third-parties/google";
 const MarkdownEditor = dynamic(
   () => import("@uiw/react-markdown-editor").then((mod) => mod.default),
   { ssr: false }
@@ -132,6 +133,9 @@ function ProfileEditPage() {
       },
     });
     if (response.success) {
+      sendGAEvent("event", "profile edit save", {
+        value: user?.scratch_username,
+      });
       toast.success("変更内容を保存しました。");
     } else {
       console.error(response.message, response.error);

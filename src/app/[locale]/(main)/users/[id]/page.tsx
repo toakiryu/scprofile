@@ -100,5 +100,5 @@ export default async function PagesUserProfile({
     return;
   }
 
-  return <UserProfilePreview user={user} />;
+  return <UserProfilePreview user={user} analyticsEvent />;
 }
