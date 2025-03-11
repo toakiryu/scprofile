@@ -12,12 +12,13 @@ import { getMessages, getTranslations } from "next-intl/server";
 
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
+import { ThemeProvider } from "next-themes";
 import { routing } from "@/i18n/routing";
+import { cn } from "@/lib/utils";
 
 import { Toaster } from "sonner";
 
-import { ThemeProvider } from "next-themes";
-import LoadingOverlay from "@/components/LoadingOverlay";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 import localFont from "next/font/local";
 import {
@@ -27,7 +28,8 @@ import {
   M_PLUS_Rounded_1c,
 } from "next/font/google";
 import "yakuhanjp";
-import { cn } from "@/lib/utils";
+
+import LoadingOverlay from "@/components/LoadingOverlay";
 import Header from "@/components/header";
 import Banner from "@/components/banner";
 import Footer from "@/components/footer";
@@ -308,6 +310,7 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} suppressHydrationWarning>
+      <GoogleAnalytics gaId={process.env.GA_ID || ""} />
       <body
         className={cn(
           "relative w-full h-full overflow-x-clip font-main antialiased scroll-smooth",
