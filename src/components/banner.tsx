@@ -7,7 +7,7 @@ function Banner() {
       <div className="container flex flex-col items-center justify-center gap-4 md:h-12 px-3 mx-auto md:flex-row">
         <Link
           className="inline-flex text-xs leading-normal md:text-sm"
-          href="https://pro.magicui.design"
+          href="/"
           target="_blank"
         >
           ✨{"  "}
