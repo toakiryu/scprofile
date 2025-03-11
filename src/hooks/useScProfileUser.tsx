@@ -7,6 +7,7 @@ import { scratchAuthCheckSession } from "@/components/scratch-auth-component/scr
 import { getScprofileUserInfo } from "@/utils/scprofile/account";
 import sessionConfig from "../../_config/session.config";
 import { addEventListenerByName } from "@/utils/eventHandler";
+import { sendGAEvent } from "@next/third-parties/google";
 
 function useScProfileUser() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -38,6 +39,9 @@ function useScProfileUser() {
       });
       if (response.success && response.data) {
         setUser(response.data);
+        sendGAEvent("event", "get_user_info", {
+          value: response.data.scratch_username,
+        });
       } else {
         deleteCookie(sessionConfig.account_cookie_name);
         setError(error);

@@ -29,6 +29,7 @@ import { toast } from "sonner";
 import { IconLoader2 } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 import { dispatchEventByName } from "@/utils/eventHandler";
+import { sendGAEvent } from "@next/third-parties/google";
 
 function UserSettingModalTabContentProfile({
   tab,
@@ -58,8 +59,11 @@ function UserSettingModalTabContentProfile({
     setIsLoading(true);
     const response = await putScprofileUserUpdate({ updates: values });
     if (response.success) {
+      sendGAEvent("event", "user_setting_save", {
+        value: "profile",
+      });
       toast.success(t("tabs.profile.toast.success"));
-      dispatchEventByName("scprofile-update")
+      dispatchEventByName("scprofile-update");
     } else {
       toast.error(t("tabs.profile.toast.error"));
       console.error(response.message, response.error);

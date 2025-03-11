@@ -2,9 +2,10 @@
 
 import React, { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { useRouter } from "@/i18n/routing";
-import { toast } from "sonner";
 import { setCookie } from "cookies-next/client";
+import { toast } from "sonner";
+import { useRouter } from "@/i18n/routing";
+import { IconLoader2 } from "@tabler/icons-react";
 import {
   scratchAuthSessionGetUserName,
   setScratchAuthSession,
@@ -14,8 +15,8 @@ import {
   postScprofileUserSignin,
   postScprofileUserSignup,
 } from "@/utils/scprofile/account";
+import { sendGAEvent } from "@next/third-parties/google";
 import sessionConfig from "../../../../../_config/session.config";
-import { IconLoader2 } from "@tabler/icons-react";
 
 export default function AuthPage() {
   const router = useRouter();
@@ -79,6 +80,8 @@ export default function AuthPage() {
       }
 
       let scratch_username;
+
+      sendGAEvent("event", "signin", { value: scratch_username });
 
       // STEP 2. セッションからユーザー名の取得
       if (session) {
