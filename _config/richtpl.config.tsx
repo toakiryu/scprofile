@@ -54,26 +54,15 @@ const siteConfig: siteConfigType = {
       selectSwitch: true, // Whether to allow switching color modes
     },
     // URL to the social card image (replace with your project's image)
-    image: "/wp-content/image/upload/front/nextjs/twitter-card.png",
+    image: "/wp-content/brand/scratch/icon-256x256.png",
     // Metadata for the site
     metadata: {
-      keywords: [
-        "Template",
-        "i18n",
-        "template",
-        "Next.js",
-        "autoprefixer",
-        "rich",
-        "tailwindcss",
-        "framer-motion",
-        "next-themes",
-        "vercel-hosting",
-        "next-intl",
-        "lucide-icons",
-      ],
       authors: { name: "toakiryu", url: "https://toakiryu.com" },
       creator: "toakiryu",
-      icons: "/favicon.ico",
+      icons: {
+        icon: "/wp-content/brand/scratch/icon-256x256.ico",
+        apple: "/wp-content/brand/scratch/icon-256x256.png",
+      },
       generator: "Next.js",
       publisher: "Vercel",
       robots: "follow, index",
