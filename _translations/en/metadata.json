@@ -4,6 +4,6 @@
       "template": "ScProfile",
       "default": "ScProfile"
     },
-    "description": "「ScProfile」とは、Scratchアカウントのプロフィール作成サービスです。Scratchアカウントと連携することで利用することが可能です。"
+    "description": "ScProfile is a profile creation service for Scratch accounts. It can be used by linking with a Scratch account."
   }
 }

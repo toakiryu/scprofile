@@ -265,7 +265,7 @@ export async function generateMetadata({
       config.themeConfig?.metadata?.metadataBase ?? new URL(config.url),
     alternates: generateAlternates(),
     openGraph: {
-      type: "website",
+      type: "profile",
       url: config.url,
       siteName: title,
       title: title,
@@ -279,7 +279,7 @@ export async function generateMetadata({
         "ja-JP",
     },
     twitter: {
-      card: "summary_large_image",
+      card: "summary",
       site: `@${config.themeConfig?.metadata?.creator ?? "toakiryu"}`,
       title: title,
       description: description,
