@@ -35,7 +35,7 @@
     "cookies-next": "^5.1.0",
     "deepmerge": "^4.3.1",
     "gray-matter": "^4.0.3",
-    "lucide-react": "^0.477.0",
+    "lucide-react": "^0.483.0",
     "motion": "^12.4.10",
     "next": "15.2.1",
     "next-intl": "^3.26.5",
